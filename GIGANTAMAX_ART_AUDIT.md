@@ -15,3 +15,15 @@ Source: https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/pokemon_forms
 These IDs are **form identifiers, not verified image URLs**. The app currently uses base-species artwork for Gigantamax and marks it as 'basisafbeelding'. Do not replace that with unverified sprite URLs. Before mapping a form sprite, verify that the normal and shiny files actually exist, render the correct form, and are suitable for use. Do not conflate Pokémon HOME forms with Pokémon GO artwork.
 
 Phone preview: https://shinyopa.github.io/shiny-pokemon-go/telefoon-test/index.html
+
+## Samsung Galaxy S24 Ultra visual checks (2026-11-07)
+
+The user supplied screenshots of the isolated phone preview confirming distinct Gigantamax form artwork for Venusaur (normal/shiny), Charizard (normal/shiny), Blastoise (normal/shiny), Butterfree (normal/shiny), and Pikachu (shiny). Normal Pikachu was not shown.
+
+## Expanded form ID mapping
+
+The test branch now has 30 unambiguous Gigantamax form IDs from PokeAPI's `pokemon.csv` (IDs 10195–10225, excluding 10219). This is **not** 30 visually confirmed images, and does **not** establish Pokémon GO release status.
+
+Toxtricity has two form IDs (10219 Amped and 10228 Low Key); Urshifu has two (10226 Single Strike and 10227 Rapid Strike). The generic species-only entries must not be assigned either form without a corresponding form label.
+
+Any newly mapped sprite must be visually checked on mobile in normal and shiny variants. The preview remains separate from the production Pokédex.
