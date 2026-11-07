@@ -54,6 +54,10 @@ const gmaxMap = JSON.parse(gmaxBlock);
 assert.equal(Object.keys(gmaxMap).length, 30, 'Review any change to the Gigantamax artwork candidates');
 for(const [dex,id] of [[3,10195],[6,10196],[9,10197],[12,10198],[25,10199],[52,10200],[68,10201],[94,10202],[99,10203],[131,10204]]) assert.equal(gmaxMap[dex],id, 'Wrong Gigantamax form for dex '+dex);
 assert(!gmaxMap[849]&&!gmaxMap[892], 'Do not guess ambiguous Toxtricity or Urshifu forms');
+const gmaxCatalog = [...html.matchAll(/\[(\d+),"Gigantamax ([^"]+)"\]/g)].map(m => ({dex:Number(m[1]),name:m[2]}));
+assert.equal(gmaxCatalog.length,17,'Review changes to the Gigantamax catalog explicitly');
+assert.deepEqual(gmaxCatalog.filter(x=>!gmaxMap[x.dex]).map(x=>x.name),['Toxtricity'],'Only ambiguous Toxtricity may lack a mapped Gigantamax form');
+
 assert(html.includes('battleArtwork(x,rf!==\'all\'&&regionEligible)'), 'Battle art must use form-aware URL resolver');
 assert(html.includes("note.textContent.replace('Gigantamax-vorm','basisafbeelding')"), 'Failed Gigantamax art must be labeled as fallback');
 console.log('Static checks passed: '+variants.length+' costumes; '+missing.length+' unmapped. Browser and visual checks still required.');
