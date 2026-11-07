@@ -11,6 +11,9 @@ const variants = [...variantsBlock.matchAll(/\[(\d+),"([^"]+)"\]/g)].map(m => ({
 const art = html.split('const automaticCostumeArt=')[1].split('function costumeImage')[0];
 const mapped = new Set([...art.matchAll(/"(costume-[^"]+)":"https:\/\/[^"]+"/g)].map(m=>m[1]));
 const missing = variants.filter(v => !mapped.has(v.id));
+assert(variants.some(v=>v.dex===854&&v.name==='Antique Sinistea (Halloween bow)'), 'Sinistea must use National Pokédex #854');
+assert(!variants.some(v=>v.dex===1001&&v.name.includes('Sinistea')), 'Old incorrect Sinistea dex number returned');
+assert(html.includes("legacyKey=kind==='costume'&&dex===854"), 'Legacy Sinistea collection-count migration removed');
 assert.equal(variants.length, 182, 'Unexpected costume catalog change: review additions explicitly');
 assert.equal(missing.length, 16, 'Mapping coverage changed: update audited baseline after review');
 for(const id of [
