@@ -67,7 +67,7 @@ All 18 species in the current Gigantamax catalog are accounted for below. A chec
 | Cinderace | Verified | Verified |
 | Inteleon | Verified | Verified |
 | Toxtricity | Pending: Amped/Low Key ambiguous | Pending: Amped/Low Key ambiguous |
-| Grimmsnarl | Pending | Pending |
+| Grimmsnarl | Verified | Pending |
 
 **Next screenshots:** Snorlax normal; Garbodor shiny/normal; Grimmsnarl shiny/normal. Toxtricity needs explicit form separation before claiming correct art. Eevee was added to the isolated preview catalog on 2026-11-07 (shiny and normal), using form ID 10205; visual verification remains pending.
 
@@ -82,3 +82,7 @@ Screenshot of the isolated phone preview confirms distinct Gigantamax shiny artw
 ## Samsung screenshot (2026-11-07, 23:23 local)
 
 Normal Gigantamax **Eevee (#133), Snorlax (#143), and Garbodor (#569)** are visibly rendered with their distinct Gigantamax silhouettes. Lapras, Rillaboom and Cinderace normal variants are also visible. The earlier screenshots already verified the shiny counterparts. The only current catalog species with no visual verification is **Grimmsnarl**, while **Toxtricity** needs explicit Amped/Low Key handling. This confirms rendering only, not Pokémon GO release status.
+
+## Samsung screenshot (2026-11-07, 23:24 local)
+
+The shiny Gigantamax Grimmsnarl (#861) sprite renders with the correct distinct Gigantamax silhouette in the three-column mobile layout. The Toxtricity (#849) shiny card still displays its ordinary body shape rather than the Gigantamax form; the newly added 'vorm nog te kiezen (Amped/Low Key)' label is correctly visible. Do not count Toxtricity as verified. Grimmsnarl normal remains pending.
