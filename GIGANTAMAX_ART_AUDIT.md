@@ -39,3 +39,7 @@ The user screenshot shows Gigantamax Gengar (normal and shiny) and Kingler (norm
 ## Catalog coverage audit (2026-11-07)
 
 The current Pokédex catalog lists **17 distinct Gigantamax species**. Of those, **16** have an unambiguous form ID in `gigantamaxFormSprites`. **Toxtricity (#849)** is the only listed species without a unique mapping: Amped G-Max = 10219, Low Key G-Max = 10228. The 30-ID mapping also includes 14 species that are not in the app's Gigantamax catalog; mapping presence must not be mistaken for an in-game availability claim or an instruction to add unreleased entries. A regression test now checks this coverage.
+
+## Samsung screenshots (2026-11-07, 22:56 local)
+
+Two additional screenshots show Gigantamax Lapras in both shiny and normal form, and Gigantamax Snorlax in shiny form, all with distinctive Gigantamax artwork. Gengar (normal) and Kingler (both) remain visibly correct. Snorlax normal, Eevee (both), and Garbodor (both) are not fully visible and remain unverified. The three-column layout is readable; this is a visual rendering audit only.
