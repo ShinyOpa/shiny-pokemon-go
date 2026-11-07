@@ -35,3 +35,7 @@ The user visually confirmed Gigantamax form art in the isolated phone preview fo
 ## Further Samsung screenshot (2026-11-07, 22:51 local)
 
 The user screenshot shows Gigantamax Gengar (normal and shiny) and Kingler (normal and shiny) rendered with their distinct Gigantamax forms. Machamp (normal and shiny) is reconfirmed. This completes the visual review of the first four additional Kanto forms (Meowth, Machamp, Gengar, Kingler) in both variants. This is a visual check only, not a confirmation of in-game release status.
+
+## Catalog coverage audit (2026-11-07)
+
+The current Pokédex catalog lists **17 distinct Gigantamax species**. Of those, **16** have an unambiguous form ID in `gigantamaxFormSprites`. **Toxtricity (#849)** is the only listed species without a unique mapping: Amped G-Max = 10219, Low Key G-Max = 10228. The 30-ID mapping also includes 14 species that are not in the app's Gigantamax catalog; mapping presence must not be mistaken for an in-game availability claim or an instruction to add unreleased entries. A regression test now checks this coverage.
