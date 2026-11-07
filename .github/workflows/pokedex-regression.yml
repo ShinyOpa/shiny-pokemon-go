@@ -19,6 +19,6 @@ jobs:
           node-version: '22'
       - name: Validate embedded JavaScript syntax
         run: |
-          node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const js=html.match(/<script>([\\s\\S]*?)<\\/script>/); if(!js)throw Error('Missing inline script'); new Function(js[1]); console.log('JavaScript syntax valid');"
+          node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const js=html.split('<script>')[1]?.split('</script>')[0]; if(!js)throw Error('Missing inline script'); new Function(js); console.log('JavaScript syntax valid');"
       - name: Check catalog, sprites, and regions
         run: node tests/pokedex-regression.test.cjs
