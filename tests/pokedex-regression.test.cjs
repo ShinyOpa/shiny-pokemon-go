@@ -58,6 +58,10 @@ const gmaxCatalog = [...html.matchAll(/\[(\d+),"Gigantamax ([^"]+)"\]/g)].map(m 
 assert.equal(gmaxCatalog.length,20,'Review changes to the Gigantamax catalog explicitly');
 assert(gmaxCatalog.some(x=>x.name==='Toxtricity (Amped)')&&gmaxCatalog.some(x=>x.name==='Toxtricity (Low Key)'),'Both Toxtricity forms must remain in the catalog');
 assert(html.includes('10219')&&html.includes('10228'),'Both distinct Toxtricity form sprites required');
+assert(html.includes("x.name==='Gigantamax Toxtricity (Amped)'?10219"),'Amped must resolve to its own sprite');
+assert(html.includes("x.name==='Gigantamax Toxtricity (Low Key)'?10228"),'Low Key must resolve to its own sprite');
+assert(html.includes('[849,"Gigantamax Toxtricity"],[849,"Gigantamax Toxtricity (Amped)"]'),'Legacy Toxtricity entry must remain until saved counts can be migrated safely');
+
 assert(gmaxCatalog.some(x=>x.dex===133&&x.name==='Eevee'),'Gigantamax Eevee missing from catalog');
 assert.deepEqual(gmaxCatalog.filter(x=>!gmaxMap[x.dex]).map(x=>x.name),['Toxtricity','Toxtricity (Amped)','Toxtricity (Low Key)'],'Toxtricity uses dedicated form-specific artwork rather than species mapping');
 
