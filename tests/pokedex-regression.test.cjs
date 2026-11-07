@@ -49,4 +49,7 @@ for(const name of ['addRegionals','addShadowVariants','addExpandedVariants','exp
 assert(html.includes('dataset.costumeTried'), 'Costume fallback retry-loop guard removed');
 assert(html.includes("if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))saved=parsed"), 'Costume fallback must tolerate invalid localStorage');
 assert(html.includes('const next=unique.find(u=>!attempted.includes(u))'), 'Costume fallback must skip previously failed URLs');
+assert(html.includes('const gigantamaxFormSprites={3:10195,6:10196,9:10197}'), 'Gigantamax starter form IDs changed');
+assert(html.includes('battleArtwork(x,rf!==\'all\'&&regionEligible)'), 'Battle art must use form-aware URL resolver');
+assert(html.includes("note.textContent.replace('Gigantamax-vorm','basisafbeelding')"), 'Failed Gigantamax art must be labeled as fallback');
 console.log('Static checks passed: '+variants.length+' costumes; '+missing.length+' unmapped. Browser and visual checks still required.');
