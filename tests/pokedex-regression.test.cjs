@@ -38,6 +38,7 @@ assert(html.includes("if(active)el('regionFilter').value='all'"), 'Shiny catalog
 assert(html.includes("localStorage.setItem('shinyGO_test_regions_v1'"), 'Existing quantity storage key changed');
 // Guard against regressions that previously broke startup or costume fallbacks.
 assert(html.includes('function savedCollectionRows(){try{'), 'Safe collection reader removed');
+assert(html.includes("data.filter(x=>x&&typeof x==='object'&&!Array.isArray(x))"), 'Malformed saved collection rows must be ignored');
 for(const name of ['addRegionals','addShadowVariants','addExpandedVariants','expandDex']){
   const start=html.indexOf('function '+name+'()');
   assert(start>=0, 'Missing function '+name);
