@@ -60,9 +60,9 @@ All 18 species in the current Gigantamax catalog are accounted for below. A chec
 | Machamp | Verified | Verified |
 | Kingler | Verified | Verified |
 | Lapras | Verified | Verified |
-| Eevee | Verified | Pending |
-| Snorlax | Verified | Pending |
-| Garbodor | Verified | Pending |
+| Eevee | Verified | Verified |
+| Snorlax | Verified | Verified |
+| Garbodor | Verified | Verified |
 | Rillaboom | Verified | Verified |
 | Cinderace | Verified | Verified |
 | Inteleon | Verified | Verified |
@@ -78,3 +78,7 @@ Added #133 Gigantamax Eevee to the isolated test branch. `addNormalBattleVariant
 ## Samsung screenshot (2026-11-07, 23:22 local)
 
 Screenshot of the isolated phone preview confirms distinct Gigantamax shiny artwork for **Eevee (#133)** and **Garbodor (#569)**. Lapras, Snorlax, Rillaboom and Cinderace shiny images remain visible in the same three-column layout. Eevee and Garbodor **normal** variants are not shown in this screenshot and remain pending. No changes to production or collection storage.
+
+## Samsung screenshot (2026-11-07, 23:23 local)
+
+Normal Gigantamax **Eevee (#133), Snorlax (#143), and Garbodor (#569)** are visibly rendered with their distinct Gigantamax silhouettes. Lapras, Rillaboom and Cinderace normal variants are also visible. The earlier screenshots already verified the shiny counterparts. The only current catalog species with no visual verification is **Grimmsnarl**, while **Toxtricity** needs explicit Amped/Low Key handling. This confirms rendering only, not Pokémon GO release status.
