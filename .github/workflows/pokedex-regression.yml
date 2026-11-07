@@ -1,0 +1,24 @@
+name: Pokédex regression checks
+on:
+  push:
+    branches:
+      - fix-region-normal-costume-audit-20261107
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/**'
+      - '.github/workflows/pokedex-regression.yml'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate embedded JavaScript syntax
+        run: |
+          node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const js=html.match(/<script>([\\s\\S]*?)<\\/script>/); if(!js)throw Error('Missing inline script'); new Function(js[1]); console.log('JavaScript syntax valid');"
+      - name: Check catalog, sprites, and regions
+        run: node tests/pokedex-regression.test.cjs
