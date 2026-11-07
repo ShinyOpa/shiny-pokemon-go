@@ -1,8 +1,8 @@
 {
   "id": "/shiny-pokemon-go/",
-  "name": "Shiny Pokédex GO",
-  "short_name": "Shiny GO",
-  "description": "Persoonlijke Pokémon GO-verzameling met Shiny, kostuums, Mega, Gigantamax, Shadow en regio's.",
+  "name": "Pokedex Go",
+  "short_name": "Pokedex Go",
+  "description": "Pokedex Go: persoonlijke Pokémon GO-verzameling met Shiny, kostuums, Mega, Gigantamax, Shadow en regio's.",
   "lang": "nl",
   "start_url": "./",
   "scope": "./",
