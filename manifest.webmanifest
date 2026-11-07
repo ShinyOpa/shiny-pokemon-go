@@ -1,0 +1,15 @@
+{
+  "name": "Shiny Pokédex GO",
+  "short_name": "Shiny GO",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d121b",
+  "theme_color": "#101722",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
