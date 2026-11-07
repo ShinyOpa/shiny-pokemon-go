@@ -14,6 +14,11 @@ const missing = variants.filter(v => !mapped.has(v.id));
 assert(variants.some(v=>v.dex===854&&v.name==='Antique Sinistea (Halloween bow)'), 'Sinistea must use National Pokédex #854');
 assert(!variants.some(v=>v.dex===1001&&v.name.includes('Sinistea')), 'Old incorrect Sinistea dex number returned');
 assert(html.includes("legacyKey=kind==='costume'&&dex===854"), 'Legacy Sinistea collection-count migration removed');
+const confirmedBlock = html.split('const confirmedShinyCostumes=new Set(')[1].split(');')[0];
+const confirmedIds = [...confirmedBlock.matchAll(/"([^"]+)"/g)].map(m=>m[1]);
+const variantIds = new Set(variants.map(v=>v.id));
+assert.equal(confirmedIds.filter(id=>!variantIds.has(id)).length, 0, 'Confirmed costumes must match actual catalog IDs exactly');
+assert(confirmedIds.includes('costume-854-antique-sinistea-halloween-bow'), 'Corrected Sinistea costume must count in Shiny collection');
 assert.equal(variants.length, 182, 'Unexpected costume catalog change: review additions explicitly');
 assert.equal(missing.length, 16, 'Mapping coverage changed: update audited baseline after review');
 for(const id of [
