@@ -27,3 +27,7 @@ The test branch now has 30 unambiguous Gigantamax form IDs from PokeAPI's `pokem
 Toxtricity has two form IDs (10219 Amped and 10228 Low Key); Urshifu has two (10226 Single Strike and 10227 Rapid Strike). The generic species-only entries must not be assigned either form without a corresponding form label.
 
 Any newly mapped sprite must be visually checked on mobile in normal and shiny variants. The preview remains separate from the production Pokédex.
+
+## Additional Samsung screenshots (2026-11-07, 22:49 local)
+
+The user visually confirmed Gigantamax form art in the isolated phone preview for Pikachu (normal), Meowth (normal and shiny), Machamp (normal and shiny), Gengar (shiny), Rillaboom (normal and shiny), Cinderace (normal and shiny), and Inteleon (normal and shiny). Gengar normal and Kingler were not visible in these screenshots. Distinct form artwork renders in three-column layout with accessible quantity buttons. These checks confirm rendered artwork, not Pokémon GO availability.
