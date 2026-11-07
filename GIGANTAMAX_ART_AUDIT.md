@@ -46,7 +46,7 @@ Two additional screenshots show Gigantamax Lapras in both shiny and normal form,
 
 ## Remaining visible-artwork checklist
 
-All 17 species in the current Gigantamax catalog are accounted for below. A check means a Samsung screenshot showed the correct Gigantamax silhouette and color variant, not that it is released in Pokémon GO.
+All 18 species in the current Gigantamax catalog are accounted for below. A check means a Samsung screenshot showed the correct Gigantamax silhouette and color variant, not that it is released in Pokémon GO.
 
 | Species | Shiny | Normal |
 |---|---|---|
@@ -60,6 +60,7 @@ All 17 species in the current Gigantamax catalog are accounted for below. A chec
 | Machamp | Verified | Verified |
 | Kingler | Verified | Verified |
 | Lapras | Verified | Verified |
+| Eevee | Pending | Pending |
 | Snorlax | Verified | Pending |
 | Garbodor | Pending | Pending |
 | Rillaboom | Verified | Verified |
@@ -68,4 +69,8 @@ All 17 species in the current Gigantamax catalog are accounted for below. A chec
 | Toxtricity | Pending: Amped/Low Key ambiguous | Pending: Amped/Low Key ambiguous |
 | Grimmsnarl | Pending | Pending |
 
-**Next screenshots:** Snorlax normal; Garbodor shiny/normal; Grimmsnarl shiny/normal. Toxtricity needs explicit form separation before claiming correct art. Eevee has a known G-Max form ID in the mapping but is not currently in the 17-species Gigantamax catalog; do not report it as a missing card without checking catalog scope.
+**Next screenshots:** Snorlax normal; Garbodor shiny/normal; Grimmsnarl shiny/normal. Toxtricity needs explicit form separation before claiming correct art. Eevee was added to the isolated preview catalog on 2026-11-07 (shiny and normal), using form ID 10205; visual verification remains pending.
+
+## Catalog update: Gigantamax Eevee
+
+Added #133 Gigantamax Eevee to the isolated test branch. `addNormalBattleVariants()` creates the normal entry alongside the shiny entry; it preserves existing quantities via the established storage key. Catalog now contains 18 species; 17 have a unique form ID, and Toxtricity is still ambiguous. Eevee normal and shiny need mobile screenshot verification before production promotion.
