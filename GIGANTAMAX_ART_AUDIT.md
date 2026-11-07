@@ -31,3 +31,7 @@ Any newly mapped sprite must be visually checked on mobile in normal and shiny v
 ## Additional Samsung screenshots (2026-11-07, 22:49 local)
 
 The user visually confirmed Gigantamax form art in the isolated phone preview for Pikachu (normal), Meowth (normal and shiny), Machamp (normal and shiny), Gengar (shiny), Rillaboom (normal and shiny), Cinderace (normal and shiny), and Inteleon (normal and shiny). Gengar normal and Kingler were not visible in these screenshots. Distinct form artwork renders in three-column layout with accessible quantity buttons. These checks confirm rendered artwork, not Pokémon GO availability.
+
+## Further Samsung screenshot (2026-11-07, 22:51 local)
+
+The user screenshot shows Gigantamax Gengar (normal and shiny) and Kingler (normal and shiny) rendered with their distinct Gigantamax forms. Machamp (normal and shiny) is reconfirmed. This completes the visual review of the first four additional Kanto forms (Meowth, Machamp, Gengar, Kingler) in both variants. This is a visual check only, not a confirmation of in-game release status.
