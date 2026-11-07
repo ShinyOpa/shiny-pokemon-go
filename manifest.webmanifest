@@ -1,7 +1,11 @@
 {
+  "id": "/shiny-pokemon-go/",
   "name": "Shiny Pokédex GO",
   "short_name": "Shiny GO",
+  "description": "Persoonlijke Pokémon GO-verzameling met Shiny, kostuums, Mega, Gigantamax, Shadow en regio's.",
+  "lang": "nl",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0d121b",
   "theme_color": "#101722",
@@ -9,7 +13,8 @@
     {
       "src": "icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
