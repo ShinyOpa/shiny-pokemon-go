@@ -28,4 +28,16 @@ assert(html.includes("const regionEligible=(!x.kind&&!x.form&&x.shinyForm!==true
 assert(html.includes("rf==='Hisui'&&!!x.form"), 'Hisui regional forms excluded');
 assert(html.includes("if(active)el('regionFilter').value='all'"), 'Shiny catalog must clear region filter');
 assert(html.includes("localStorage.setItem('shinyGO_test_regions_v1'"), 'Existing quantity storage key changed');
+// Guard against regressions that previously broke startup or costume fallbacks.
+assert(html.includes('function savedCollectionRows(){try{'), 'Safe collection reader removed');
+for(const name of ['addRegionals','addShadowVariants','addExpandedVariants','expandDex']){
+  const start=html.indexOf('function '+name+'()');
+  assert(start>=0, 'Missing function '+name);
+  const end=html.indexOf('\nfunction ',start+1);
+  const body=html.slice(start,end<0?undefined:end);
+  assert(body.includes('savedCollectionRows()'), name+' does not use safe saved-data reader');
+}
+assert(html.includes('dataset.costumeTried'), 'Costume fallback retry-loop guard removed');
+assert(html.includes("if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))saved=parsed"), 'Costume fallback must tolerate invalid localStorage');
+assert(html.includes('const next=unique.find(u=>!attempted.includes(u))'), 'Costume fallback must skip previously failed URLs');
 console.log('Static checks passed: '+variants.length+' costumes; '+missing.length+' unmapped. Browser and visual checks still required.');
