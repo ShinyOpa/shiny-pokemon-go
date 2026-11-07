@@ -60,9 +60,9 @@ All 18 species in the current Gigantamax catalog are accounted for below. A chec
 | Machamp | Verified | Verified |
 | Kingler | Verified | Verified |
 | Lapras | Verified | Verified |
-| Eevee | Pending | Pending |
+| Eevee | Verified | Pending |
 | Snorlax | Verified | Pending |
-| Garbodor | Pending | Pending |
+| Garbodor | Verified | Pending |
 | Rillaboom | Verified | Verified |
 | Cinderace | Verified | Verified |
 | Inteleon | Verified | Verified |
@@ -74,3 +74,7 @@ All 18 species in the current Gigantamax catalog are accounted for below. A chec
 ## Catalog update: Gigantamax Eevee
 
 Added #133 Gigantamax Eevee to the isolated test branch. `addNormalBattleVariants()` creates the normal entry alongside the shiny entry; it preserves existing quantities via the established storage key. Catalog now contains 18 species; 17 have a unique form ID, and Toxtricity is still ambiguous. Eevee normal and shiny need mobile screenshot verification before production promotion.
+
+## Samsung screenshot (2026-11-07, 23:22 local)
+
+Screenshot of the isolated phone preview confirms distinct Gigantamax shiny artwork for **Eevee (#133)** and **Garbodor (#569)**. Lapras, Snorlax, Rillaboom and Cinderace shiny images remain visible in the same three-column layout. Eevee and Garbodor **normal** variants are not shown in this screenshot and remain pending. No changes to production or collection storage.
