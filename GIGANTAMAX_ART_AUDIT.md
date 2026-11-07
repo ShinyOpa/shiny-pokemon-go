@@ -43,3 +43,29 @@ The current Pokédex catalog lists **17 distinct Gigantamax species**. Of those,
 ## Samsung screenshots (2026-11-07, 22:56 local)
 
 Two additional screenshots show Gigantamax Lapras in both shiny and normal form, and Gigantamax Snorlax in shiny form, all with distinctive Gigantamax artwork. Gengar (normal) and Kingler (both) remain visibly correct. Snorlax normal, Eevee (both), and Garbodor (both) are not fully visible and remain unverified. The three-column layout is readable; this is a visual rendering audit only.
+
+## Remaining visible-artwork checklist
+
+All 17 species in the current Gigantamax catalog are accounted for below. A check means a Samsung screenshot showed the correct Gigantamax silhouette and color variant, not that it is released in Pokémon GO.
+
+| Species | Shiny | Normal |
+|---|---|---|
+| Venusaur | Verified | Verified |
+| Charizard | Verified | Verified |
+| Blastoise | Verified | Verified |
+| Butterfree | Verified | Verified |
+| Pikachu | Verified | Verified |
+| Meowth | Verified | Verified |
+| Gengar | Verified | Verified |
+| Machamp | Verified | Verified |
+| Kingler | Verified | Verified |
+| Lapras | Verified | Verified |
+| Snorlax | Verified | Pending |
+| Garbodor | Pending | Pending |
+| Rillaboom | Verified | Verified |
+| Cinderace | Verified | Verified |
+| Inteleon | Verified | Verified |
+| Toxtricity | Pending: Amped/Low Key ambiguous | Pending: Amped/Low Key ambiguous |
+| Grimmsnarl | Pending | Pending |
+
+**Next screenshots:** Snorlax normal; Garbodor shiny/normal; Grimmsnarl shiny/normal. Toxtricity needs explicit form separation before claiming correct art. Eevee has a known G-Max form ID in the mapping but is not currently in the 17-species Gigantamax catalog; do not report it as a missing card without checking catalog scope.
