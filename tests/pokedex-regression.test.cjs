@@ -68,5 +68,9 @@ assert(gmaxCatalog.some(x=>x.dex===133&&x.name==='Eevee'),'Gigantamax Eevee miss
 assert.deepEqual(gmaxCatalog.filter(x=>!gmaxMap[x.dex]).map(x=>x.name),['Toxtricity','Toxtricity (Amped)','Toxtricity (Low Key)'],'Toxtricity uses dedicated form-specific artwork rather than species mapping');
 
 assert(html.includes('battleArtwork(x,rf!==\'all\'&&regionEligible)'), 'Battle art must use form-aware URL resolver');
+assert(html.includes('function hydrateRegionalArtwork()'), 'Regional forms must load their own artwork');
+assert(html.includes("encodeURIComponent(slug)"), 'Regional form lookup must use exact form slug');
+assert(html.includes("regionalArtCache[x.form]||''"), 'Do not display incorrect base species art for regional forms');
+assert(html.includes('hydrateRegionalArtwork()}'), 'Regional artwork must hydrate after rendering');
 assert(html.includes("note.textContent.replace('Gigantamax-vorm','basisafbeelding')"), 'Failed Gigantamax art must be labeled as fallback');
 console.log('Static checks passed: '+variants.length+' costumes; '+missing.length+' unmapped. Browser and visual checks still required.');
