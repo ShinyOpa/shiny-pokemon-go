@@ -34,7 +34,7 @@ for(const id of [
 assert(html.includes('const originalCostumeArt={...automaticCostumeArt}'), 'Original mapping fallback removed');
 assert(html.includes("const regionEligible=!x.kind&&x.shinyForm!==true&&(!x.form||!!formRegion)"), 'Normal-only regional filter removed');
 assert(html.includes("formRegion?formRegion===rf"), 'Regional forms must match their own region, not their national Pokédex number');
-for(const [form,region] of [['hisui','Hisui'],['alola','Alola'],['galar','Galar']]) assert(html.includes("includes('"+form+"')"), 'Missing '+region+' form detection');
+for(const [form,region] of [['hisui','Hisui'],['alola','Alola'],['galar','Galar']]) assert(html.includes("String(x.form).toLowerCase().includes('"+form+"')"), 'Missing '+region+' form detection');
 assert(html.includes("rf==='all'||(regionEligible"), 'Region filter must reject out-of-region Pokémon');
 assert(html.includes("if(active)el('regionFilter').value='all'"), 'Shiny catalog must clear region filter');
 assert(html.includes("localStorage.setItem('shinyGO_test_regions_v1'"), 'Existing quantity storage key changed');
