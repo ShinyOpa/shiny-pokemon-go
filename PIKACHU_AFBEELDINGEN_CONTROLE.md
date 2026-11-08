@@ -36,3 +36,7 @@ In de `automaticCostumeArt`-tabel zijn twee paren Pikachu-vermeldingen gevonden 
 Het tweede paar verdient extra controle: voor Baseball Shirt gebruiken we inmiddels de twee door de gebruiker goedgekeurde lokale PNG's, terwijl Varsity Jacket nog op de gedeelde externe URL wijst. **Niet automatisch samenvoegen**: een gedeelde afbeelding is op zichzelf geen bewijs dat de kostuums identiek zijn. Eerst de kostuums aan Serebii en het beeld vergelijken. Voor beide paren blijven bestaande IDs en aantallen onaangeroerd.
 
 Halloween 2026 is inmiddels voorzien van twee door de gebruiker geüploade afbeeldingen (`025-halloween2026.png` en `025-halloween2026-shiny.png`) en de gebruiker heeft de weergave bevestigd.
+
+## Varsity Jacket: afzonderlijk kostuum bevestigd
+Varsity Jacket Pikachu verscheen in augustus 2025 bij de World Championships; Baseball Shirt Pikachu in april 2026 bij een Japans honkbalevenement. Beide hebben een shiny-uitvoering. Het zijn **verschillende** kostuums en mogen niet samengevoegd worden. In de testversie is voor Varsity Jacket momenteel één bestaande vermelding met een automatische afbeelding aanwezig; er is nog geen afzonderlijke shiny-kaart met gecontroleerde eigen PNG. Eerst de gewone en shiny-art controleren; alleen als die niet betrouwbaar uit bestaande bronnen kunnen worden gekoppeld, de gebruiker om twee lokale PNG's vragen. Geen bestaande aantallen wijzigen.
+Bronnen: https://pokemongo.fandom.com/wiki/Pikachu en https://dexjourney.com/guides/costume-pokemon/
