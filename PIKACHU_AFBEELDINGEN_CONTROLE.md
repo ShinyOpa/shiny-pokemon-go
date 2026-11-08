@@ -15,3 +15,7 @@ Aantal automatische Pikachu-afbeeldingskoppelingen: 90 (sommige zijn extra of al
 - Serebii is een naam-/vormreferentie; kopieer afbeeldingen niet zonder passende rechten.
 - Verander geen bestaande Pokémon-ID's of lokale verzamelgegevens.
 - Publiceer pas na visuele test en goedkeuring.
+
+## Bevestigde dubbele naamgeving: baseball
+Serebii vermeldt één kostuum `Baseball Shirt` en geen afzonderlijk `Baseball`-kostuum. In onze app bestaan `Baseball Pikachu` (normaal), `Baseball Pikachu (Shiny)` en `Baseball Shirt Pikachu` (normaal). De twee normale records tonen dezelfde afbeelding. **Nog niet verwijderen of samenvoegen:** bestaande IDs en aantallen moeten veilig gemigreerd worden en eventuele gebruikersgegevens behouden blijven. De testversie laat beide staan totdat de samenvoeging veilig ontworpen en goedgekeurd is.
+Bron: https://www.serebii.net/pokemongo/pokemon/025.shtml
