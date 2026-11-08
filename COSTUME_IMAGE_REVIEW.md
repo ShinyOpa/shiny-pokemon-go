@@ -30,3 +30,10 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 - https://pokemongo.com/news/halloween-part-2-2026
 - https://leekduck.com/events/halloween-2026-part-1/
 - https://www.pogoatlas.com/events/halloween-2026
+
+## Onderzoek 8 november 2026 — Sinistea eerst
+- **Bevestigd:** Halloween 2026 Sinistea met strik, zowel Phony als Antique, met Shiny-uitvoering. Bronnen: https://pokemongo.com/news/halloween-part-1-2026 en https://www.serebii.net/pokemongo/events/halloween2026part1.shtml .
+- **Ook bevestigd:** Polteageist met Halloween-strik (Phony/Antique) als evolutie. Controleer of alle vier combinaties correct in de Pokédex voorkomen en hun shiny-sprites hebben.
+- **Nog open:** juiste afzonderlijke PNG-URL's voor Shiny Antique Sinistea en bijbehorende evoluties. Geen gewone Shiny of Phony als vervanging gebruiken.
+- **Drifloon/Litwick:** Halloween 2026 officiële eventlijst bevestigt Drifblim-kostuum, niet Drifloon-kostuum; Litwick wordt niet als Halloween-kostuum aangekondigd. Niet als bevestigd presenteren.
+- **Zubat/Golbat/Crobat:** afbeeldingen zijn inmiddels door gebruiker in GitHub-testbranch geüpload en op telefoon goedgekeurd. Oudere statusnotities hierboven over ontbrekende hoge hoeden zijn achterhaald.
