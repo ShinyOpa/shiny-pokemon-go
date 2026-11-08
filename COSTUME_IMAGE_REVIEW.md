@@ -44,3 +44,21 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 - **#492 Flower Crown Shaymin:** geen betrouwbare specifieke kostuumvermelding bevestigd in deze controle. Niet verwarren met Shaymin-vormen of Gracidea-bloemen op Pikachu.
 - **Actie:** alle drie voorlopig in de test laten staan zonder niet-gecontroleerde afbeelding; pas na positieve bronbevestiging toevoegen of na afzonderlijke gebruikersgoedkeuring opruimen.
 - **Bronnen:** https://pokemongo.com/news/winter-holiday-part-2-2022 ; https://pokemongo.com/news/holiday-part1-2024 ; https://bulbapedia.bulbagarden.net/wiki/Event_Pok%C3%A9mon_%28GO%29
+
+## Bronnencontrole: 8 november 2026 — status per openstaand kostuum
+
+| Item | Bestaan bevestigd? | Juiste Shiny-kostuum-PNG in test? | Actie |
+|---|---|---|---|
+| Sinistea #854 Halloween Bow (Phony) | Ja | Nee | Bronafbeelding zoeken |
+| Sinistea #854 Halloween Bow (Antique) | Ja | Nee | Bronafbeelding zoeken |
+| Polteageist #855 Halloween Bow (Phony) | Ja | Nee | Bronafbeelding zoeken |
+| Polteageist #855 Halloween Bow (Antique) | Ja | Nee | Bronafbeelding zoeken |
+| Swinub #220 Winter Scarf | Niet bevestigd | Nee | Niet publiceren als bevestigd |
+| Mudkip #258 Holiday Hat | Niet bevestigd | Nee | Niet publiceren als bevestigd |
+| Shaymin #492 Flower Crown | Niet bevestigd | Nee | Niet publiceren als bevestigd |
+| Drifloon #425 Halloween | Niet bevestigd; **Drifblim #426** wel | Nee | Geen Drifblim-afbeelding gebruiken voor Drifloon |
+| Litwick #607 Halloween | Niet bevestigd | Nee | Geen gewone Shiny gebruiken |
+
+Bronnen: https://pokemongo.com/news/halloween-part-1-2026 ; https://www.serebii.net/pokemongo/events/halloween2026part1.shtml ; https://www.serebii.net/pokemongo/shiny.shtml ; https://www.reddit.com/r/TheSilphRoad/comments/1x10kpf/assets_for_pikachu_wearing_a_hat_and_capelet/
+
+De PokeMiners-bron meldt dat kostuumassets voor Sinistea/Polteageist op 8 oktober 2026 zijn toegevoegd. De **vier exacte PNG-bestandsnamen en visuele correctheid zijn nog niet vastgesteld**. Niet koppelen op basis van een gegokte URL. Bestaande gebruikersaantallen en de live branch blijven onaangeroerd.
