@@ -20,7 +20,8 @@ const variantIds = new Set(variants.map(v=>v.id));
 assert.equal(confirmedIds.filter(id=>!variantIds.has(id)).length, 0, 'Confirmed costumes must match actual catalog IDs exactly');
 assert(confirmedIds.includes('costume-854-antique-sinistea-halloween-bow'), 'Corrected Sinistea costume must count in Shiny collection');
 assert.equal(variants.length, 182, 'Unexpected costume catalog change: review additions explicitly');
-assert.equal(missing.length, 16, 'Mapping coverage changed: update audited baseline after review');
+assert.equal(missing.length, 6, 'Mapping coverage changed: update audited baseline after review');
+for(const id of ['costume-657-halloween-frogadier','costume-658-halloween-greninja','costume-723-halloween-dartrix','costume-724-halloween-decidueye','costume-573-fashionable-cinccino','costume-715-halloween-headband-noivern','costume-547-flower-crown-whimsicott','costume-832-holiday-attire-dubwool','costume-614-holiday-ribbon-beartic','costume-738-holiday-attire-vikavolt']) assert(mapped.has(id), 'Missing mined costume art mapping: '+id);
 for(const id of [
  'costume-25-halloween-2026-pikachu-hat-and-capelet',
  'costume-41-halloween-2026-zubat-top-hat',
