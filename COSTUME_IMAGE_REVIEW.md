@@ -37,3 +37,10 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 - **Nog open:** juiste afzonderlijke PNG-URL's voor Shiny Antique Sinistea en bijbehorende evoluties. Geen gewone Shiny of Phony als vervanging gebruiken.
 - **Drifloon/Litwick:** Halloween 2026 officiële eventlijst bevestigt Drifblim-kostuum, niet Drifloon-kostuum; Litwick wordt niet als Halloween-kostuum aangekondigd. Niet als bevestigd presenteren.
 - **Zubat/Golbat/Crobat:** afbeeldingen zijn inmiddels door gebruiker in GitHub-testbranch geüpload en op telefoon goedgekeurd. Oudere statusnotities hierboven over ontbrekende hoge hoeden zijn achterhaald.
+
+## Tweede controle — Swinub, Mudkip en Shaymin
+- **#220 Winter Scarf Swinub:** niet bevestigd als kostuum in geraadpleegde officiële Winter Holiday 2022 en Holiday 2024 Pokémon GO-eventlijsten; gewone Swinub staat daar wel vermeld. Dit bewijst niet dat het kostuum nooit bestaat, dus verder controleren voordat we verwijderen.
+- **#258 Holiday Hat Mudkip:** geen betrouwbare specifieke kostuumvermelding bevestigd in deze controle. Niet verwarren met gewone Shiny Mudkip.
+- **#492 Flower Crown Shaymin:** geen betrouwbare specifieke kostuumvermelding bevestigd in deze controle. Niet verwarren met Shaymin-vormen of Gracidea-bloemen op Pikachu.
+- **Actie:** alle drie voorlopig in de test laten staan zonder niet-gecontroleerde afbeelding; pas na positieve bronbevestiging toevoegen of na afzonderlijke gebruikersgoedkeuring opruimen.
+- **Bronnen:** https://pokemongo.com/news/winter-holiday-part-2-2022 ; https://pokemongo.com/news/holiday-part1-2024 ; https://bulbapedia.bulbagarden.net/wiki/Event_Pok%C3%A9mon_%28GO%29
