@@ -68,3 +68,8 @@ De PokeMiners-bron meldt dat kostuumassets voor Sinistea/Polteageist op 8 oktobe
 - Dit is een nuttige visuele controlebron naast Serebii. Er zijn **nog geen rechtstreeks werkende PNG-bestands-URL's** uit afgeleid; niet blind kopiëren naar de site.
 - Officiële bevestiging Sinistea Shiny-bow: https://pokemongo.com/news/halloween-part-1-2026 ; volledige vormen: https://ftp.serebii.net/pokemongo/events/halloween2026part1.shtml .
 - De bestaande goedgekeurde drie top-hat bats en alle aantallen ongewijzigd laten.
+
+## Goedkeuring gebruiker — 8 november 2026
+- **Goedgekeurd in de volledige test op telefoon:** roze Shiny `854.png` voor Antique en Phony Sinistea met Halloween-strik; roze Shiny `855-bow.png` voor Antique en Phony Polteageist met Halloween-strik. De gele verificatiewaarschuwingen zijn voor deze vier verwijderd.
+- **Nog open, bestaan niet bevestigd:** #220 Winter Scarf Swinub, #258 Holiday Hat Mudkip, #425 Halloween Drifloon (let op: Drifblim #426 is bevestigd), #492 Flower Crown Shaymin en #607 Halloween Litwick (officiële 2026 aankondiging noemt gewone Litwick).
+- Oudere regels hierboven die Sinistea/Polteageist nog als ontbrekend vermelden zijn achterhaald.
