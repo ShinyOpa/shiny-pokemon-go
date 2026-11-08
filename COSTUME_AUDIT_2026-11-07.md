@@ -32,3 +32,22 @@ Ten costume entries now have direct candidate URLs built from the PokeMiners min
 ## Catalog cross-check — 2026-11-08
 
 Cross-checked the remaining six species (Swinub #220, Mudkip #258, Drifloon #425, Shaymin #492, Litwick #607, Sinistea #854) against the mined `Hailey-Ross/hailsDotGO/internal/costumes/catalog.json` costume-code-to-species table. **No matching costume-code entries were found for these six dex numbers in that catalog snapshot.** This does not prove the costumes do not exist, only that this particular source cannot establish a matching shiny costume asset. No speculative mappings added. The ten recent candidate mappings have not yet been visually verified in a browser; their count should not be treated as ten confirmed images.
+
+## Source-file verification — 2026-11-08
+
+All ten new candidate files were independently fetched from `PokeMiners/pogo_assets` at pinned commit `d4432a333e123bfe8f44153f51bf58aa8d34d5b1` via GitHub, and each returned nonempty base64 image content:
+
+| Dex | Shiny costume code | GitHub file exists |
+| --- | --- | --- |
+| 657 | cFALL_2024 | Yes |
+| 658 | cFALL_2024 | Yes |
+| 723 | cFALL_2024 | Yes |
+| 724 | cFALL_2024 | Yes |
+| 573 | cFASHION_2025 | Yes |
+| 715 | cHALLOWEEN_2025 | Yes |
+| 547 | cSPRING_2024 | Yes |
+| 832 | cWINTER_2024 | Yes |
+| 614 | fWINTER_2020 | Yes |
+| 738 | fWINTER_2025 | Yes |
+
+This verifies the source files, **not** the CDN delivery, phone rendering, or whether every human-readable costume label precisely matches the mined code. Browser visual review is still needed before merging to main.
