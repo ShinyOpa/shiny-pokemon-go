@@ -62,3 +62,9 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 Bronnen: https://pokemongo.com/news/halloween-part-1-2026 ; https://www.serebii.net/pokemongo/events/halloween2026part1.shtml ; https://www.serebii.net/pokemongo/shiny.shtml ; https://www.reddit.com/r/TheSilphRoad/comments/1x10kpf/assets_for_pikachu_wearing_a_hat_and_capelet/
 
 De PokeMiners-bron meldt dat kostuumassets voor Sinistea/Polteageist op 8 oktober 2026 zijn toegevoegd. De **vier exacte PNG-bestandsnamen en visuele correctheid zijn nog niet vastgesteld**. Niet koppelen op basis van een gegokte URL. Bestaande gebruikersaantallen en de live branch blijven onaangeroerd.
+
+## Nieuwe visuele bron — GoDex, 8 november 2026
+- GoDex changelog van 27 oktober 2026 toont **alle vier Shiny-bowvarianten** afzonderlijk als afbeelding: https://godex.site/changelog (zoek `Bow Sinistea` en `Bow Polteageist`).
+- Dit is een nuttige visuele controlebron naast Serebii. Er zijn **nog geen rechtstreeks werkende PNG-bestands-URL's** uit afgeleid; niet blind kopiëren naar de site.
+- Officiële bevestiging Sinistea Shiny-bow: https://pokemongo.com/news/halloween-part-1-2026 ; volledige vormen: https://ftp.serebii.net/pokemongo/events/halloween2026part1.shtml .
+- De bestaande goedgekeurde drie top-hat bats en alle aantallen ongewijzigd laten.
