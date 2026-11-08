@@ -15,7 +15,7 @@ Test branch only. Static source-code audit; this is **not** a browser visual tes
 - Halloween Drifloon (#425) — `costume-425-halloween-drifloon`
 - Flower Crown Shaymin (#492) — `costume-492-flower-crown-shaymin`
 - Halloween Litwick (#607) — `costume-607-halloween-litwick`
-- Antique Sinistea (Halloween bow) (#1001) — `costume-1001-antique-sinistea-halloween-bow`
+- Antique Sinistea (Halloween bow) (#854) — `costume-854-antique-sinistea-halloween-bow` (catalog number corrected; legacy saved-count ID is migrated by `addSpecialVariants`)
 - Flower Crown Whimsicott (#547) — `costume-547-flower-crown-whimsicott`
 - Fashionable Cinccino (#573) — `costume-573-fashionable-cinccino`
 - Holiday Ribbon Beartic (#614) — `costume-614-holiday-ribbon-beartic`
@@ -30,3 +30,7 @@ Test branch only. Static source-code audit; this is **not** a browser visual tes
 ## Caution
 
 Do not map a standard shiny sprite to a costume merely to fill a gap. Check that any proposed source file is actually the correct costume and shiny variant. Do not merge to main until browser and saved-count regression tests pass.
+
+## Follow-up audit — 2026-11-08
+
+The 16 remaining entries are **not yet backed by a verified matching shiny costume asset**. They must not be replaced with the ordinary Pokémon artwork. The Sinistea entry now uses the correct National Pokédex number (#854), with the old #1001 storage ID retained as a migration lookup. The regional-filter artwork changes are separate from these costume mappings.
