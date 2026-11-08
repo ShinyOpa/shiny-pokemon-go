@@ -79,3 +79,15 @@ De PokeMiners-bron meldt dat kostuumassets voor Sinistea/Polteageist op 8 oktobe
 - Statische controle van de eerste 121 kostuumvermeldingen: geen dubbele combinatie van Pokédex-nummer en kostuumnaam aangetroffen. Dit is geen volledige visuele afbeeldingscontrole.
 - De goedgekeurde roze Sinistea/Polteageist-PNG's zijn gekoppeld aan vier aparte kaarten; waarschuwing verwijderd.
 - Nog handmatig te bekijken: Flower Crown versus Cherry Blossoms bij alle Eevee-evoluties, en eventuele foutieve of ontbrekende kostuumafbeeldingen. Geen wijziging aan live `main`.
+
+
+## Laatste drie controles — 8 november 2026
+
+### 1. Eevee-evoluties met bloemen en bloesem
+De testcode heeft voor de acht evoluties (Vaporeon #134, Jolteon #135, Flareon #136, Espeon #196, Umbreon #197, Leafeon #470, Glaceon #471 en Sylveon #700) afzonderlijke PokeMiners-URL's voor Flower Crown (`cNOVEMBER_2018`) en Cherry Blossoms (`cSPRING_2023`). **Technisch 16 verschillende URL's; visuele juistheid en bereikbaarheid zijn nog niet door de gebruiker bevestigd.** De afzonderlijke Eevee #133-afbeeldingen zijn door de gebruiker al goedgekeurd.
+
+### 2. Laatste controle overige kostuums
+Goedgekeurd door de gebruiker: top-hat Zubat/Golbat/Crobat, roze shiny Halloween-bow Sinistea/Polteageist, Flower Crown en Cherry Blossoms Eevee. De vijf als niet-bestaand beoordeelde kostuums zijn verwijderd. Nog open: steekproef op alle overige kostuums, met nadruk op ontbrekende afbeeldingen en verkeerde gewone/shiny varianten. Niet ongeteste kaarten als goedgekeurd markeren.
+
+### 3. Opslag en Android
+De testcode leest bij opstarten `shinyGO_test_regions_v1` uit `localStorage` en schrijft na een aantalwijziging terug naar dezelfde sleutel. **Statisch gecontroleerd; nog geen daadwerkelijke Android-herstarttest.** Test op Samsung: kies een kaart met 0, druk +, herlaad, controleer 1; druk -, herlaad, controleer 0. Test ook twee verschillende kostuumkaarten en de 3-kolomsweergave. Gebruik dezelfde browser en wis geen sitegegevens. Live `main` blijft ongewijzigd totdat gebruiker de volledige test goedkeurt.
