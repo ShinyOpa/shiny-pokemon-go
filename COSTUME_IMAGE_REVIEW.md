@@ -73,3 +73,9 @@ De PokeMiners-bron meldt dat kostuumassets voor Sinistea/Polteageist op 8 oktobe
 - **Goedgekeurd in de volledige test op telefoon:** roze Shiny `854.png` voor Antique en Phony Sinistea met Halloween-strik; roze Shiny `855-bow.png` voor Antique en Phony Polteageist met Halloween-strik. De gele verificatiewaarschuwingen zijn voor deze vier verwijderd.
 - **Nog open, bestaan niet bevestigd:** #220 Winter Scarf Swinub, #258 Holiday Hat Mudkip, #425 Halloween Drifloon (let op: Drifblim #426 is bevestigd), #492 Flower Crown Shaymin en #607 Halloween Litwick (officiële 2026 aankondiging noemt gewone Litwick).
 - Oudere regels hierboven die Sinistea/Polteageist nog als ontbrekend vermelden zijn achterhaald.
+
+## Technische controle na goedkeuring — 8 november 2026
+- De vijf door de eigenaar als niet-uitgebracht aangeduide kostuums zijn uit `costumeVariants` verwijderd; de gewone Pokémon blijven staan.
+- Statische controle van de eerste 121 kostuumvermeldingen: geen dubbele combinatie van Pokédex-nummer en kostuumnaam aangetroffen. Dit is geen volledige visuele afbeeldingscontrole.
+- De goedgekeurde roze Sinistea/Polteageist-PNG's zijn gekoppeld aan vier aparte kaarten; waarschuwing verwijderd.
+- Nog handmatig te bekijken: Flower Crown versus Cherry Blossoms bij alle Eevee-evoluties, en eventuele foutieve of ontbrekende kostuumafbeeldingen. Geen wijziging aan live `main`.
