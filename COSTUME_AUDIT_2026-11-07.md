@@ -28,3 +28,7 @@ The 16 remaining entries are **not yet backed by a verified matching shiny costu
 ## Follow-up — 2026-11-08: 10 new mined-asset mappings
 
 Ten costume entries now have direct candidate URLs built from the PokeMiners mined shiny-asset catalog (`Hailey-Ross/hailsDotGO`, `internal/costumes/catalog.json`), pinned to asset commit `d4432a333e123bfe8f44153f51bf58aa8d34d5b1`: Halloween Frogadier, Greninja, Dartrix, Decidueye, Noivern; Fashionable Cinccino; Flower Crown Whimsicott; Holiday Attire Dubwool, Vikavolt; Holiday Ribbon Beartic. These match species and shiny costume code in the mined catalog. **HTTP image delivery and visual appearance on Samsung remain to be tested.** Six entries remain unmapped.
+
+## Catalog cross-check — 2026-11-08
+
+Cross-checked the remaining six species (Swinub #220, Mudkip #258, Drifloon #425, Shaymin #492, Litwick #607, Sinistea #854) against the mined `Hailey-Ross/hailsDotGO/internal/costumes/catalog.json` costume-code-to-species table. **No matching costume-code entries were found for these six dex numbers in that catalog snapshot.** This does not prove the costumes do not exist, only that this particular source cannot establish a matching shiny costume asset. No speculative mappings added. The ten recent candidate mappings have not yet been visually verified in a browser; their count should not be treated as ten confirmed images.
