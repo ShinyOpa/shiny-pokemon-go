@@ -5,6 +5,7 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 ## Bevestigd
 - Halloween 2026: Pikachu met hoed/capelet, Zubat met hoge hoed en Sinistea met strik zijn officieel aangekondigd als mogelijk Shiny.
 - Drifblim met Halloween Mischief-kostuum wordt officieel genoemd; **Drifloon met dit kostuum niet**. Laat de Drifloon-vermelding voorlopig ongemoeid en onderzoek de herkomst.
+- Halloween 2026 Part II vermeldt **gewone Litwick** (Shiny mogelijk), maar **niet Litwick met Halloween-kostuum**. Deze vermelding blijft verdacht en krijgt geen gewone Shiny-afbeelding als vervanging.
 - Sinistea met strik bestaat in Phony- en Antique-vorm volgens evenementendatabronnen. Gebruik uitsluitend bijpassende Shiny-kostuumafbeeldingen.
 - De bestaande Sinistea-migratie voor opgeslagen gegevens mag niet worden verwijderd.
 
@@ -26,5 +27,6 @@ Dit is een **controlelijst**, geen goedkeuring voor publicatie. Wijzig de live P
 
 ## Bronnen
 - https://pokemongo.com/news/halloween-part-1-2026
+- https://pokemongo.com/news/halloween-part-2-2026
 - https://leekduck.com/events/halloween-2026-part-1/
 - https://www.pogoatlas.com/events/halloween-2026
