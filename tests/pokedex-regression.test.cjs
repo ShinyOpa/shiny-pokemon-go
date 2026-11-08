@@ -71,6 +71,8 @@ assert(html.includes('battleArtwork(x,rf!==\'all\'&&regionEligible)'), 'Battle a
 assert(html.includes('function hydrateRegionalArtwork()'), 'Regional forms must load their own artwork');
 assert(html.includes("encodeURIComponent(slug)"), 'Regional form lookup must use exact form slug');
 assert(html.includes("regionalArtCache[x.form]||''"), 'Do not display incorrect base species art for regional forms');
+assert(html.includes("if(x.form)return regionalArtCache[x.form]||''"), 'All Pokémon must show actual regional form art too');
+assert(html.includes("(x.form?'data-region-form="), 'Every regional form image must be hydrated');
 assert(html.includes('hydrateRegionalArtwork()}'), 'Regional artwork must hydrate after rendering');
 assert(html.includes("note.textContent.replace('Gigantamax-vorm','basisafbeelding')"), 'Failed Gigantamax art must be labeled as fallback');
 console.log('Static checks passed: '+variants.length+' costumes; '+missing.length+' unmapped. Browser and visual checks still required.');
