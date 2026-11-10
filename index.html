@@ -103,10 +103,10 @@ function trimTrialCostume(img){
  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(data[(y*w+x)*4+3]>25){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
  if(right<left)return;
  const bw=right-left+1,bh=bottom-top+1,side=Math.max(bw,bh)*1.12;
- if(side>Math.min(w,h)*0.98)return;
+ if(side>Math.min(w,h)*0.98){if(!String(img.closest('.card')?.textContent||'').includes('(Niet-Shiny)'))return;const crop=Math.min(w,h)*0.54;left=(w-crop)/2;top=(h-crop)/2;side=crop;var normalCenterCrop=true;}
  const out=document.createElement('canvas');out.width=256;out.height=256;
  const o=out.getContext('2d');o.imageSmoothingEnabled=true;o.imageSmoothingQuality='high';
- o.drawImage(c,left-(side-bw)/2,top-(side-bh)/2,side,side,0,0,256,256);
+ o.drawImage(c,normalCenterCrop?left:left-(side-bw)/2,normalCenterCrop?top:top-(side-bh)/2,side,side,0,0,256,256);
  img.dataset.trialDone='1';img.src=out.toDataURL('image/png');
  }catch(err){console.warn('Trial costume crop unavailable',err)}
 }
