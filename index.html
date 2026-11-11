@@ -41,8 +41,8 @@ function renderShinyRegions(){
  const names=['Kanto','Johto','Hoenn','Sinnoh','Unova','Kalos','Alola','Galar','Hisui','Paldea'];
  const eligible=rows.filter(x=>shinyCategory(x)==='ordinary'&&x.shinyForm!==false&&x.kind!=='costume'&&x.kind!=='shadow'&&x.kind!=='special'&&x.kind!=='background');
  const current=el('regionFilter').value;
- const wrapper=document.createElement('div');wrapper.className='shiny-regions-inline';wrapper.style.cssText='padding:8px 0 12px 14px;border-left:2px solid #d6b75d;margin:0 0 10px 14px';
- const heading=document.createElement('div');heading.className='region-picker-meta';heading.style.padding='8px 12px';heading.textContent='🌍 Shiny per regio';wrapper.appendChild(heading);
+ const wrapper=document.createElement('details');wrapper.className='shiny-regions-inline';wrapper.style.cssText='padding:8px 0 12px 14px;border-left:2px solid #d6b75d;margin:0 0 10px 14px';
+ const heading=document.createElement('summary');heading.className='region-picker-meta';heading.style.cssText='padding:12px;cursor:pointer;font-weight:bold';heading.textContent='🌍 Shiny per regio ▾';wrapper.appendChild(heading);
  for(const name of names){
   const matching=eligible.filter(x=>name==='Hisui'?String(x.form||'').toLowerCase().includes('hisui'):regionForDex(Number(x.dex||x.id))===name);
   const total=matching.length,owned=matching.filter(x=>x.qty>0).length,pct=total?Math.round(100*owned/total):0;
