@@ -260,5 +260,12 @@ try{expandDex()}catch(err){const msg=document.createElement('div');msg.style.css
 // Separate shiny-tellers: bestaande gewone aantallen blijven intact.
 try{const saved=JSON.parse(localStorage.getItem('shinyGO_test_regions_v1')||'[]');const byId=new Map(saved.map(x=>[String(x.id),x]));rows.forEach(x=>{const value=Number(byId.get(String(x.id))?.shinyQty);x.shinyQty=Number.isFinite(value)&&value>=0?Math.floor(value):0})}catch(e){rows.forEach(x=>x.shinyQty=0)}
 render();
+try{
+ const indicator=document.createElement('p');
+ indicator.id='catalog-load-check';
+ indicator.style.cssText='font-size:12px;color:#b9c7d7;margin:4px 12px 12px';
+ indicator.textContent='Cataloguscontrole 8 · '+rows.length+' Pokémon geladen';
+ document.querySelector('.stats')?.insertAdjacentElement('afterend',indicator);
+}catch(e){console.error('Cataloguscontrole',e)}
 
 </script><script src="sync-core.js?v=1"></script><script src="sync.js?v=1"></script></body></html>
