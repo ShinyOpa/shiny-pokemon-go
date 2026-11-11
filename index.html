@@ -38,6 +38,7 @@ function renderCategoryPickers(){for(const id of ['shinyCatalog','variantFilter'
 function renderShinyRegions(){
  const host=el('shinyCatalogPickerOptions');if(!host)return;
  const ordinary=host.querySelector('[data-value="ordinary"]');if(!ordinary)return;
+ if(el('shinyCatalog').value!=='ordinary')return;
  const names=['Kanto','Johto','Hoenn','Sinnoh','Unova','Kalos','Alola','Galar','Hisui','Paldea'];
  const eligible=rows.filter(x=>shinyCategory(x)==='ordinary'&&x.shinyForm!==false&&x.kind!=='costume'&&x.kind!=='shadow'&&x.kind!=='special'&&x.kind!=='background');
  const current=el('regionFilter').value;
