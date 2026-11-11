@@ -89,7 +89,7 @@ const vivillonPatterns=['Archipelago','Continental','Elegant','Fancy','Garden','
 const vivillonStorageKey='pokedexgo_vivillon_patterns_v1';
 function vivillonRead(){try{const x=JSON.parse(localStorage.getItem(vivillonStorageKey)||'{}');return x&&typeof x==='object'?x:{}}catch(e){return {}}}
 function renderVivillonPatterns(filtered,sc){
- const index=filtered.findIndex(x=>Number(x.dex||x.id)===666&&!x.kind&&!x.form);
+ const index=filtered.findIndex(x=>Number(x.dex||x.id)===666);
  if(index<0)return;
  const card=el('grid').children[index];if(!card)return;
  const shiny=sc==='ordinary',mode=shiny?'shiny':'normal',store=vivillonRead();
