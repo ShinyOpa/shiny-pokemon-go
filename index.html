@@ -98,7 +98,8 @@ function renderVivillonPatterns(filtered,sc){
  const inline=document.createElement('div');inline.className='vivillon-inline';
  inline.innerHTML='<details class="unown-panel" '+(wasOpen?'open':'')+'><summary>🦋 '+(shiny?'Shiny ':'')+'vormen '+owned+'/20</summary><p class="unown-form-help">20 Vivillon-patronen, elk met een eigen teller. Gewone en shiny aantallen zijn gescheiden.</p><div class="unown-forms-grid">'+vivillonPatterns.map(p=>{
  const n=Math.max(0,Number(store[mode+'-'+p])||0),slug=p.toLowerCase().replace(/é/g,'e').replace(/ /g,'-');
- const url='https://play.pokemonshowdown.com/sprites/gen5'+(shiny?'-shiny':'')+'/vivillon-'+slug+'.png';
+ const spriteSlug=slug.replace('high-plains','highplains').replace('icy-snow','icysnow').replace('poke-ball','pokeball');
+ const url='https://play.pokemonshowdown.com/sprites/'+(p==='Meadow'?(shiny?'home-shiny':'dex'):(shiny?'gen5-shiny':'gen5'))+'/'+(p==='Meadow'?(shiny?'vivillon.png':'vivillon-meadow.png'):'vivillon-'+spriteSlug+'.png');
  return '<div class="unown-form-card '+(n?'is-owned':'')+'"><img loading="lazy" src="'+url+'" alt="Vivillon '+p+'" onerror="this.style.display=\'none\'"><strong>'+p+'</strong><div class="unown-form-counter"><button type="button" data-vivillon="'+p+'" data-vivillon-d="-1" aria-label="Minder '+p+'">−</button><span>'+n+'</span><button type="button" data-vivillon="'+p+'" data-vivillon-d="1" aria-label="Meer '+p+'">+</button></div></div>'
  }).join('')+'</div></details>';
  const name=card.querySelector('b'),counter=card.querySelector('.counter'),details=inline.querySelector('details');
