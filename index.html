@@ -67,12 +67,15 @@ function renderUnownForms(filtered,sc){
  if(!filtered.some(x=>Number(x.dex||x.id)===201&&!x.kind&&!x.form)){host.innerHTML='';return}
  const shiny=sc==='ordinary',store=unownRead(),mode=shiny?'shiny':'normal';
  const owned=unownLetters.filter(letter=>(Number(store[mode+'-'+letter])||0)>0).length;
- const wasOpen=host.querySelector('details')?.open||false;
+ const wasOpen=document.querySelector('.unown-inline details')?.open||false;
  host.innerHTML='<details class="unown-panel" '+(wasOpen?'open':'')+'><summary>🔤 Unown – 28 '+(shiny?'shiny ':'')+'vormen ('+owned+'/28)</summary><p class="unown-form-help">Iedere letter, ! en ? heeft een eigen teller. Gewone en shiny vormen worden afzonderlijk bewaard.</p><div class="unown-forms-grid">'+unownLetters.map(letter=>{
  const n=Math.max(0,Number(store[mode+'-'+letter])||0),suffix=letter==='!'?'exclamation':letter==='?'?'question':letter.toLowerCase();
  const url='https://play.pokemonshowdown.com/sprites/'+(shiny?'gen5-shiny':'gen5')+'/unown-'+suffix+'.png';
  return '<div class="unown-form-card '+(n?'is-owned':'')+'"><img loading="lazy" src="'+url+'" alt="Unown '+letter+(shiny?' shiny':'')+'"><strong>Unown '+letter+'</strong><div class="unown-form-counter"><button type="button" data-unown="'+letter+'" data-unown-d="-1" aria-label="Minder Unown '+letter+'">−</button><span>'+n+'</span><button type="button" data-unown="'+letter+'" data-unown-d="1" aria-label="Meer Unown '+letter+'">+</button></div></div>'
  }).join('')+'</div></details>';
+ const index=filtered.findIndex(x=>Number(x.dex||x.id)===201&&!x.kind&&!x.form);
+ const card=el('grid').children[index];
+ if(card){const inline=document.createElement('div');inline.className='unown-inline';inline.style.gridColumn='1 / -1';inline.innerHTML=host.innerHTML;card.after(inline);host.innerHTML='';}
 }
 document.addEventListener('click',function(e){
  const b=e.target.closest('button[data-unown]');if(!b)return;
