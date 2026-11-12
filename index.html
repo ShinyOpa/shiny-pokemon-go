@@ -305,19 +305,35 @@ el('printSubforms').onclick=()=>{
  const section=document.createElement('section');section.id='subformsPrintSheet';
  section.innerHTML='<h1>Pokédex GO – ontbrekende '+(shiny?'shiny ':'')+'subvormen</h1><p>'+items.length+' ontbrekende vormen • Unown, Vivillon en Flabébé</p><div class="subforms-print-grid">'+items.map(x=>'<article><img src="'+escapeHtml(x.url)+'" alt=""><strong>'+escapeHtml(x.group)+'</strong><span>'+escapeHtml(x.name)+'</span><small>☐ Nog te vangen</small></article>').join('')+'</div>';
  const style=document.createElement('style');style.id='subformsPrintStyle';
- style.textContent='#subformsPrintSheet{position:fixed;inset:0;z-index:99999;overflow:auto;background:white;color:#111;padding:16px;font-family:Arial,sans-serif}#subformsPrintSheet h1{font-size:20px}#subformsPrintSheet p{font-size:12px}.subforms-print-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.subforms-print-grid article{border:1px solid #999;break-inside:avoid;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;text-align:center;font-size:12px}.subforms-print-grid img{width:80px;height:80px;object-fit:contain}.subforms-print-grid small{font-size:10px}@media print{body:has(#subformsPrintSheet) > *:not(#subformsPrintSheet){display:none!important}#subformsPrintSheet{position:static!important;inset:auto!important;overflow:visible!important;padding:0!important}.subforms-print-grid{grid-template-columns:repeat(4,1fr)}};
+ style.textContent='#subformsPrintSheet{position:fixed;inset:0;z-index:99999;overflow:auto;background:white;color:#111;padding:16px;font-family:Arial,sans-serif}#subformsPrintSheet h1{font-size:20px}#subformsPrintSheet p{font-size:12px}.subforms-print-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.subforms-print-grid article{border:1px solid #999;break-inside:avoid;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;text-align:center;font-size:12px}.subforms-print-grid img{width:80px;height:80px;object-fit:contain}.subforms-print-grid small{font-size:10px}@media print{body:has(#subformsPrintSheet) > *:not(#subformsPrintSheet){display:none!important}#subformsPrintSheet{position:static!important;inset:auto!important;overflow:visible!important;padding:0!important}.subforms-print-grid{grid-template-columns:repeat(4,1fr)}}';
  document.head.appendChild(style);document.body.appendChild(section);
  const cleanup=()=>{section.remove();style.remove();window.removeEventListener('afterprint',cleanup)};
  window.addEventListener('afterprint',cleanup);
- // Wacht tot alle externe Pokémon-afbeeldingen zijn geladen voordat Android de afdrukvoorbeeld maakt.
+ // Laad afbeeldingen als ingesloten data-URL's voor Android-afdrukken.
  const pictures=Array.from(section.querySelectorAll('img'));
- Promise.all(pictures.map(img=>new Promise(resolve=>{
-  if(img.complete){resolve();return}
-  const done=()=>{clearTimeout(timer);resolve()};
-  const timer=setTimeout(done,10000);
-  img.addEventListener('load',done,{once:true});
-  img.addEventListener('error',done,{once:true});
- }))).then(()=>{if(section.isConnected)requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
+ Promise.all(pictures.map(async img=>{
+  try{
+   const response=await fetch(img.src,{mode:'cors'});
+   if(!response.ok)throw new Error('Afbeelding niet beschikbaar');
+   const blob=await response.blob();
+   const data=await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(blob);
+   });
+   img.src=data;
+   if(img.decode)await img.decode().catch(()=>{});
+  }catch(e){
+   // Externe bron zonder CORS: behoud de normale URL als terugval.
+   await new Promise(resolve=>{
+    if(img.complete){resolve();return}
+    img.addEventListener('load',resolve,{once:true});
+    img.addEventListener('error',resolve,{once:true});
+    setTimeout(resolve,8000);
+   });
+  }
+ })).then(()=>{if(section.isConnected)requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()))});
  setTimeout(cleanup,120000);
 };
 el('backup').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rows)],{type:'application/json'}));a.download='shiny-pokedex-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)};el('restore').onclick=()=>el('file').click();el('file').onchange=async e=>{try{let v=JSON.parse(await e.target.files[0].text());if(!Array.isArray(v))throw 0;let restored=0;rows.forEach(x=>{const item=v.find(y=>String(y.id)===String(x.id));if(!item)return;const qty=Number(item.qty);if(!Number.isFinite(qty)||qty<0)return;x.qty=Math.floor(qty);if(Object.prototype.hasOwnProperty.call(item,'shinyQty')){const shiny=Number(item.shinyQty);if(Number.isFinite(shiny)&&shiny>=0)x.shinyQty=Math.floor(shiny)}restored++});if(!restored)throw new Error('Geen overeenkomende Pokémon');save();alert('Back-up hersteld: '+restored+' Pokémon bijgewerkt. Andere aantallen behouden.')}catch(e){alert('Ongeldige back-up')}};
