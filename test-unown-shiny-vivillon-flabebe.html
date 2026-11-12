@@ -99,6 +99,7 @@ function renderVivillonPatterns(filtered,sc){
  if(index<0)return;
  const card=el('grid').children[index];if(!card)return;
  const shiny=sc==='ordinary',mode=shiny?'shiny':'normal',store=vivillonRead();
+ card.classList.toggle('shiny-card',shiny);
  const owned=vivillonPatterns.filter(p=>(Number(store[mode+'-'+p])||0)>0).length;
  const wasOpen=vivillonTestIsOpen;
  const inline=document.createElement('div');inline.className='vivillon-inline';
@@ -212,6 +213,7 @@ function flabebeTestPanel(filtered,sc){
  if(index<0)return;
  const card=el('grid').children[index],row=filtered[index],name=card?.querySelector('b'),counter=card?.querySelector('.counter');if(!card||!name)return;
  const shiny=sc==='ordinary',mode=shiny?'shiny':'normal',store=flabebeTestRead();
+ card.classList.toggle('shiny-card',shiny);
  const count=f=>{
   const key=mode+'-'+f.name;
   if(Object.prototype.hasOwnProperty.call(store,key))return Math.max(0,Number(store[key])||0);
