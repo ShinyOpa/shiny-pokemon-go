@@ -348,4 +348,4 @@ try{
  document.querySelector('.stats')?.insertAdjacentElement('afterend',indicator);
 }catch(e){console.error('Cataloguscontrole',e)}
 
-</script><script src="sync-core.js?v=1"></script><script src="sync.js?v=1"></script></body></html>
+</script><script src="sync-core.js?v=1"></script><script src="sync.js?v=1"></script><script>(function(){if(!("serviceWorker" in navigator))return;window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(function(r){return r.update()}).catch(function(e){console.warn("Offline-update niet beschikbaar",e)})})})();</script></body></html>
