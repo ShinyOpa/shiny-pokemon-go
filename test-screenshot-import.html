@@ -11,22 +11,34 @@ async function extractScreenSprites(file,data){
  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
  const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);
  const names=new Set(['pikachu','eevee','rowlet','gengar','decidueye','snorlax','noibat','zubat','crobat','golbat','aron','mareep','dratini','drifloon','skrelp','bagon','meowth','machop','magnemite']);
- const words=[];
- const visit=node=>{if(!node||typeof node!=='object')return;if(node.text&&node.bbox&&(!node.words||!node.words.length)&&(!node.lines||!node.lines.length))words.push(node);for(const key of ['blocks','paragraphs','lines','words'])if(Array.isArray(node[key]))node[key].forEach(visit)};
+ const candidates=[];
+ const visit=node=>{
+  if(!node||typeof node!=='object')return;
+  if(node.text&&node.bbox){
+   const name=node.text.trim().replace(/[^a-z]/gi,'').toLowerCase();
+   if(names.has(name))candidates.push({name,b:node.bbox});
+  }
+  for(const key of ['blocks','paragraphs','lines','words'])if(Array.isArray(node[key]))node[key].forEach(visit);
+ };
  visit(data);
- // Tesseract v5 returns blocks only when explicitly requested. If unavailable,
- // show a safe full screenshot preview instead of pretending to classify a costume.
- for(const entry of words){
-  const name=(entry.text||'').replace(/[^a-z]/gi,'').toLowerCase();
-  if(!names.has(name))continue;
-  const b=entry.bbox,center=(b.x0+b.x1)/2;
-  const colWidth=w/3,left=Math.max(0,Math.round(center-colWidth*.44));
-  const top=Math.max(0,Math.round(b.y0-colWidth*.85));
-  const cw=Math.min(w-left,Math.round(colWidth*.88)),ch=Math.max(1,Math.round(b.y0-top-4));
-  if(ch<10)continue;
+ // OCR repeats the same word at block, line and word levels. Keep one
+ // occurrence per actual screen position, rather than counting each OCR layer.
+ const unique=[];
+ for(const x of candidates.sort((a,b)=>a.b.y0-b.b.y0||a.b.x0-b.b.x0)){
+  const cx=(x.b.x0+x.b.x1)/2,cy=(x.b.y0+x.b.y1)/2;
+  if(unique.some(v=>v.name===x.name&&Math.abs(v.cx-cx)<w*.065&&Math.abs(v.cy-cy)<h*.025))continue;
+  unique.push({...x,cx,cy});
+ }
+ for(const entry of unique){
+  const b=entry.b, colWidth=w/3;
+  const left=Math.max(0,Math.round(entry.cx-colWidth*.43));
+  const top=Math.max(0,Math.round(b.y0-colWidth*.78));
+  const cw=Math.min(w-left,Math.round(colWidth*.86));
+  const ch=Math.min(h-top,Math.max(1,Math.round(b.y0-top-colWidth*.07)));
+  if(ch<12||cw<12)continue;
   const crop=document.createElement('canvas');crop.width=cw;crop.height=ch;
   crop.getContext('2d').drawImage(canvas,left,top,cw,ch,0,0,cw,ch);
-  detectedSprites.push({name,src:crop.toDataURL('image/png'),y:b.y0});
+  detectedSprites.push({name:entry.name,src:crop.toDataURL('image/png'),y:b.y0});
  }
  bitmap.close();
 }
@@ -56,7 +68,7 @@ document.getElementById('analyze').onclick=()=>{
  const shinyLabel=document.createElement('label');const shinyBox=document.createElement('input');shinyBox.type='checkbox';shinyBox.checked=hasShiny;shinyLabel.append(shinyBox,document.createTextNode(' Screenshot gefilterd op Shiny'));
  const eventLabel=document.createElement('label');eventLabel.style.display='block';const eventBox=document.createElement('input');eventBox.type='checkbox';eventBox.checked=hasEvent;eventLabel.append(eventBox,document.createTextNode(' Screenshot gefilterd op Event / kostuum'));
  filters.append(shinyLabel,eventLabel);matches.appendChild(filters);
- const spritePool=detectedSprites.slice();const info=document.createElement('p');info.className='warning';info.textContent=spritePool.length+' uitsneden uit screenshot gevonden. '+(spritePool.length?'Controleer of ze bij de juiste naam staan.':'Geen uitsneden gevonden: de tekstherkenner gaf geen bruikbare naamposities door.');matches.appendChild(info);const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
+ const spritePool=detectedSprites.slice();const info=document.createElement('p');info.className='warning';info.textContent=spritePool.length+' unieke Pokémon-posities uit screenshot gevonden. '+(spritePool.length?'Controleer of ze bij de juiste naam staan.':'Geen uitsneden gevonden: de tekstherkenner gaf geen bruikbare naamposities door.');matches.appendChild(info);const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  const total=document.createElement('p');
  const refresh=()=>{
   let n=0;
