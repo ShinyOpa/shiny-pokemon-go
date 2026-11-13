@@ -63,7 +63,7 @@ function manualCostumeRender(){
    const key=mode+'|'+x.id;const selected=!!saved[key];card.classList.toggle('selected',selected);
    const pic=document.createElement('img');
    const existing=document.querySelector('.card img[src]'); // fallback via bekende afbeeldingsvelden
-   pic.src=x.image||x.img||x.art||x.sprite||x.imageUrl||x.url||'';
+   pic.src=costumeImage(x)||'';
    if(!pic.src||pic.src===location.href)pic.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+(mode==='shiny'?'shiny/':'')+(x.dex||x.id)+'.png';
    pic.onerror=()=>{pic.style.opacity='.25'};
    const label=document.createElement('span');label.textContent=x.name;
