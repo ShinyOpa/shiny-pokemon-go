@@ -121,15 +121,47 @@ async function getCostumeLibrary(){
 }
 function loadCostumeImage(url){return new Promise((resolve,reject)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Afbeelding niet beschikbaar'));im.src=url})}
 function visualSignature(img){
- const c=document.createElement('canvas');c.width=48;c.height=48;const x=c.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,48,48);x.drawImage(img,0,0,48,48);
- const p=x.getImageData(0,0,48,48).data,hist=new Float64Array(24);let n=0;
- for(let i=0;i<p.length;i+=4){let r=p[i],g=p[i+1],b=p[i+2],a=p[i+3];if(a<100||(r>205&&g>205&&b>205)||(r<48&&g<65&&b<85))continue;
- const max=Math.max(r,g,b),min=Math.min(r,g,b);if(max-min<22)continue;
- let h;if(max===r)h=((g-b)/(max-min)+6)%6;else if(max===g)h=(b-r)/(max-min)+2;else h=(r-g)/(max-min)+4;
- hist[Math.min(23,Math.floor(h*4))]++;n++}
- if(n<8)return null;for(let i=0;i<hist.length;i++)hist[i]/=n;return hist;
+ // Strip the pale GO background and the CP/stars above the Pokémon.
+ // Compare foreground shape, spatial colours and costume details separately.
+ const c=document.createElement('canvas');c.width=96;c.height=96;
+ const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0,96,96);
+ const p=x.getImageData(0,0,96,96).data,points=[];
+ for(let y=0;y<96;y++)for(let xx=0;xx<96;xx++){
+  const i=(y*96+xx)*4,r=p[i],g=p[i+1],b=p[i+2],a=p[i+3];
+  if(a<95)continue;
+  const pale=r>145&&g>155&&b>130&&Math.max(r,g,b)-Math.min(r,g,b)<70;
+  const white=r>205&&g>205&&b>205;
+  if(pale||white)continue;
+  // Screenshot crops have CP and star icons above the character.
+  if(img.dataset?.screenCrop==='true'&&y<31)continue;
+  points.push([xx,y,r,g,b]);
+ }
+ if(points.length<18)return null;
+ const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+ const left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys);
+ const out=new Float64Array(4*4*4+12);const counts=new Float64Array(16);
+ for(const [px,py,r,g,b] of points){
+  const cx=Math.min(3,Math.floor(4*(px-left)/Math.max(1,right-left+1)));
+  const cy=Math.min(3,Math.floor(4*(py-top)/Math.max(1,bottom-top+1)));
+  const k=cy*4+cx,base=k*4;
+  out[base]+=r/255;out[base+1]+=g/255;out[base+2]+=b/255;out[base+3]++;counts[k]++;
+ }
+ for(let k=0;k<16;k++){const n=counts[k];if(n){for(let j=0;j<3;j++)out[k*4+j]/=n;out[k*4+3]=Math.min(1,n/180)}}
+ // Global colour proportions stabilise comparisons across sprite sizes.
+ for(const [, ,r,g,b] of points){
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);
+  const hue=max===min?11:max===r?Math.floor((((g-b)/(max-min)+6)%6)*2):max===g?Math.floor(((b-r)/(max-min)+2)*2):Math.floor(((r-g)/(max-min)+4)*2);
+  out[64+Math.min(11,hue)]++;
+ }
+ for(let j=64;j<76;j++)out[j]/=points.length;
+ return out;
 }
-function signatureDifference(a,b){let sum=0;for(let i=0;i<a.length;i++)sum+=Math.abs(a[i]-b[i]);return sum}
+function signatureDifference(a,b){
+ let spatial=0,global=0;
+ for(let i=0;i<64;i++){const d=a[i]-b[i];spatial+=d*d*(i%4===3?.25:1)}
+ for(let i=64;i<76;i++)global+=Math.abs(a[i]-b[i]);
+ return Math.sqrt(spatial/64)+global*.65;
+}
 async function autoSuggestCostumes(){
  const status=document.getElementById('autoCostumeStatus'),btn=document.getElementById('autoCostumeBtn');
  if(!detectedSprites.length){status.textContent='Kies eerst een screenshot, herken de tekst en zoek de Pokémon-namen.';return}
@@ -139,25 +171,25 @@ async function autoSuggestCostumes(){
   for(const card of document.querySelectorAll('#matches article')){
    const dex=Number(card.dataset.dex),entries=(library.get(dex)||[]).slice(0,65);
    const name=card.querySelector('strong')?.textContent?.replace(/\s+\d+\/\d+$/,'').toLowerCase();
-   const crop=detectedSprites.find(x=>x.name===name);
+   const crop=card.querySelector('img[alt="Uitsnede uit jouw screenshot"]');
    const old=card.querySelector('.auto-costume');if(old)old.remove();
    const result=document.createElement('div');result.className='auto-costume';result.style.cssText='font-size:13px;color:#ffe1a3;padding:5px';
    card.appendChild(result);
    if(!crop||!entries.length){result.textContent='Geen bruikbare uitsnede of kostuumreferenties.';continue}
    available++;
-   const target=await loadCostumeImage(crop.src),a=visualSignature(target);
+   const target=await loadCostumeImage(crop.src);target.dataset.screenCrop='true';const a=visualSignature(target);
    if(!a){result.textContent='Uitsnede onvoldoende duidelijk voor vergelijking.';continue}
    const ranked=[];
    for(const entry of entries){try{const im=await loadCostumeImage(entry.url),b=visualSignature(im);if(b)ranked.push({entry,score:signatureDifference(a,b)})}catch(e){}}
    ranked.sort((x,y)=>x.score-y.score);
    if(ranked.length){
     const best=ranked.slice(0,3);
-    result.textContent='Automatisch vergeleken (onzeker): ';
+    result.textContent='Visuele kandidaten (nog controleren): ';
     for(const [i,v] of best.entries()){const el=document.createElement('div');el.style.cssText='display:flex;align-items:center;gap:5px;text-align:left;margin-top:4px';const im=document.createElement('img');im.src=v.entry.url;im.style.cssText='width:48px;height:48px;object-fit:contain';const label=document.createElement('span');label.textContent=(i+1)+'. '+v.entry.id.replace(/^costume-\d+-/,'').replace(/-$/,'').replace(/-/g,' ');el.append(im,label);result.append(el)}
     done++;
    }else result.textContent='Geen vergelijkbare kostuumafbeeldingen geladen.';
   }
-  status.textContent=done+' Pokémon automatisch met kostuumafbeeldingen vergeleken. Dit zijn suggesties, geen zekere herkenningen; controleer de echte uitsnede.';
+  status.textContent=done+' afzonderlijke Pokémon-uitsneden vergeleken met kostuumafbeeldingen. Controleer de suggesties; dit blijft een test.';
  }catch(e){status.textContent='Automatische vergelijking niet gelukt: '+e.message}finally{btn.disabled=false}
 }
 document.getElementById('autoCostumeBtn').onclick=autoSuggestCostumes;
