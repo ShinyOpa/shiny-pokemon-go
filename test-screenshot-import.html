@@ -4,27 +4,58 @@ upload.onchange=()=>{files=Array.from(upload.files||[]).slice(0,8);scan.disabled
 function loadOCR(){return new Promise((resolve,reject)=>{if(window.Tesseract)return resolve();const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=()=>reject(Error('Herkenningsbibliotheek kon niet worden geladen'));document.head.appendChild(script)})}
 scan.onclick=async()=>{scan.disabled=true;try{status.textContent='Herkenning wordt geladen…';await loadOCR();const worker=await Tesseract.createWorker('eng');let lines=[];try{for(let i=0;i<files.length;i++){status.textContent='Screenshot '+(i+1)+' van '+files.length+' wordt herkend…';const result=await worker.recognize(files[i]);lines.push('--- Screenshot '+(i+1)+' ---\n'+result.data.text)}}finally{await worker.terminate()}out.value=lines.join('\n\n');status.textContent='Klaar. Controleer de tekst hieronder en zoek de namen.'}catch(e){status.textContent='Herkenning mislukt: '+e.message+'. Je kunt hieronder ook zelf namen invullen.'}finally{scan.disabled=!files.length}};
 const common=["Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard","Squirtle","Wartortle","Blastoise","Caterpie","Metapod","Butterfree","Weedle","Kakuna","Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow","Ekans","Arbok","Pikachu","Raichu","Sandshrew","Sandslash","Nidoran♀","Nidorina","Nidoqueen","Nidoran♂","Nidorino","Nidoking","Clefairy","Clefable","Vulpix","Ninetales","Jigglypuff","Wigglytuff","Zubat","Golbat","Oddish","Gloom","Vileplume","Paras","Parasect","Venonat","Venomoth","Diglett","Dugtrio","Meowth","Persian","Psyduck","Golduck","Mankey","Primeape","Growlithe","Arcanine","Poliwag","Poliwhirl","Poliwrath","Abra","Kadabra","Alakazam","Machop","Machoke","Machamp","Bellsprout","Weepinbell","Victreebel","Tentacool","Tentacruel","Geodude","Graveler","Golem","Ponyta","Rapidash","Slowpoke","Slowbro","Magnemite","Magneton","Farfetch'd","Doduo","Dodrio","Seel","Dewgong","Grimer","Muk","Shellder","Cloyster","Gastly","Haunter","Gengar","Onix","Drowzee","Hypno","Krabby","Kingler","Voltorb","Electrode","Exeggcute","Exeggutor","Cubone","Marowak","Hitmonlee","Hitmonchan","Lickitung","Koffing","Weezing","Rhyhorn","Rhydon","Chansey","Tangela","Kangaskhan","Horsea","Seadra","Goldeen","Seaking","Staryu","Starmie","Mr. Mime","Scyther","Jynx","Electabuzz","Magmar","Pinsir","Tauros","Magikarp","Gyarados","Lapras","Ditto","Eevee","Vaporeon","Jolteon","Flareon","Porygon","Omanyte","Omastar","Kabuto","Kabutops","Aerodactyl","Snorlax","Articuno","Zapdos","Moltres","Dratini","Dragonair","Dragonite","Mewtwo","Mew","Aron","Mareep","Drifloon","Skrelp","Bagon","Flabébé","Vivillon","Unown","Lucario","Rayquaza"];
+
+const dexByName={Pikachu:25,Eevee:133,Rowlet:722,Gengar:94,Decidueye:724,Snorlax:143,Noibat:714,Zubat:41,Crobat:169,Golbat:42,Aron:304,Mareep:179,Drifloon:425,Skrelp:690,Bagon:371,Dratini:147,Meowth:52,Machop:66,Magnemite:81,'Flabébé':669,Vivillon:666,Unown:201,Lucario:448,Rayquaza:384};
+const costumeChoices={
+ Pikachu:['Nog kiezen','Halloween-hoed / cape','Feesthoed','Kerstmuts','Heksenhoed','Andere Pikachu-kostuum'],
+ Eevee:['Nog kiezen','Feesthoed','Bloemenkrans','Kersenbloesem','Andere Eevee-kostuum'],
+ Rowlet:['Nog kiezen','Halloween-hoed','Andere Rowlet-kostuum'],
+ Gengar:['Nog kiezen','Halloween-kostuum','Feesthoed','Andere Gengar-kostuum'],
+ Decidueye:['Nog kiezen','Halloween-kostuum','Andere Decidueye-kostuum'],
+ Snorlax:['Nog kiezen','Slaapmuts','Andere Snorlax-kostuum'],
+ Zubat:['Nog kiezen','Hoge hoed','Andere Zubat-kostuum'],
+ Golbat:['Nog kiezen','Hoge hoed','Andere Golbat-kostuum'],
+ Crobat:['Nog kiezen','Hoge hoed','Andere Crobat-kostuum']
+};
 document.getElementById('analyze').onclick=()=>{
  const words=out.value.toLowerCase().match(/[a-zÀ-ÿ]+/gi)||[];
  const counts=common.map(name=>({name,count:words.filter(w=>w.toLowerCase()===name.toLowerCase()).length})).filter(x=>x.count>0);
+ const hasShiny=/\bshiny\b/i.test(out.value);
+ const hasEvent=/\bevent\b/i.test(out.value);
  matches.replaceChildren();
- const heading=document.createElement('p');heading.textContent=counts.length?counts.length+' soorten herkend, '+counts.reduce((n,x)=>n+x.count,0)+' Pokémon geteld. Controleer de aantallen.':'Geen Pokémon-namen herkend in de testwoordenlijst.';
+ const heading=document.createElement('p');heading.textContent=counts.length?counts.length+' soorten, '+counts.reduce((n,x)=>n+x.count,0)+' exemplaren herkend.':'Geen namen herkend; controleer de tekst.';
  matches.appendChild(heading);
+ const filters=document.createElement('div');filters.className='panel';
+ const shinyLabel=document.createElement('label');const shinyBox=document.createElement('input');shinyBox.type='checkbox';shinyBox.checked=hasShiny;shinyLabel.append(shinyBox,document.createTextNode(' Screenshot gefilterd op Shiny'));
+ const eventLabel=document.createElement('label');eventLabel.style.display='block';const eventBox=document.createElement('input');eventBox.type='checkbox';eventBox.checked=hasEvent;eventLabel.append(eventBox,document.createTextNode(' Screenshot gefilterd op Event / kostuum'));
+ filters.append(shinyLabel,eventLabel);matches.appendChild(filters);
  const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
- const national={'Aron':304,'Mareep':179,'Drifloon':425,'Skrelp':690,'Bagon':371,'Flabébé':669,'Vivillon':666,'Unown':201,'Lucario':448,'Rayquaza':384};
  const total=document.createElement('p');
- const refresh=()=>{let n=0;gallery.querySelectorAll('input[type=number]').forEach(q=>{if(q.closest('article').querySelector('input[type=checkbox]').checked)n+=Math.max(0,Number(q.value)||0)});total.textContent='Totaal bevestigd: '+n+' Pokémon (alleen test)'};
+ const refresh=()=>{
+  let n=0;
+  gallery.querySelectorAll('article').forEach(card=>{
+   const check=card.querySelector('input[type=checkbox]');
+   if(check.checked)n++;
+   const img=card.querySelector('img');
+   const dex=Number(card.dataset.dex);
+   img.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+(shinyBox.checked?'shiny/':'')+dex+'.png';
+  });
+  total.textContent='Bevestigd: '+n+' exemplaren (alleen test)';
+ };
  for(const item of counts){
-  const card=document.createElement('article');card.style.cssText='display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:12px 5px;background:#102033;border:1px solid #56718e;border-radius:12px';
-  const img=document.createElement('img');img.style.cssText='height:100px;width:100%;object-fit:contain';img.alt=item.name;
-  img.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+(national[item.name]||common.indexOf(item.name)+1)+'.png';
-  const title=document.createElement('strong');title.textContent=item.name;
-  const checkLabel=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=true;check.onchange=refresh;checkLabel.append(check,document.createTextNode(' Herkenning klopt'));
-  const countLabel=document.createElement('label');countLabel.textContent='Aantal: ';
-  const qty=document.createElement('input');qty.type='number';qty.min=0;qty.max=999;qty.value=item.count;qty.style.cssText='width:65px;background:white;color:black;border-radius:7px;padding:5px;font-size:17px';qty.oninput=refresh;countLabel.appendChild(qty);
-  card.append(img,title,checkLabel,countLabel);gallery.appendChild(card);
+  for(let i=0;i<Math.min(item.count,100);i++){
+   const card=document.createElement('article');card.style.cssText='display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:10px 5px;background:#102033;border:1px solid #56718e;border-radius:12px';
+   const dex=dexByName[item.name]||common.indexOf(item.name)+1;card.dataset.dex=dex;
+   const img=document.createElement('img');img.style.cssText='height:92px;width:100%;object-fit:contain';img.alt=item.name;
+   const title=document.createElement('strong');title.textContent=item.name+(item.count>1?' '+(i+1)+'/'+item.count:'');
+   const label=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=true;check.onchange=refresh;label.append(check,document.createTextNode(' Herkenning klopt'));
+   const costume=document.createElement('select');costume.setAttribute('aria-label','Kostuum van '+item.name);costume.style.cssText='max-width:100%;width:95%;background:#fff;color:#111;padding:6px;border-radius:6px';
+   for(const choice of costumeChoices[item.name]||['Nog kiezen','Geen kostuum','Ander kostuum']){const option=document.createElement('option');option.textContent=choice;costume.appendChild(option)}
+   const custom=document.createElement('input');custom.placeholder='Of typ kostuumnaam';custom.style.cssText='width:95%;padding:6px;border-radius:6px;border:1px solid #678';custom.setAttribute('aria-label','Andere kostuumnaam voor '+item.name);
+   card.append(img,title,label,costume,custom);gallery.appendChild(card);
+  }
  }
- matches.append(gallery,total);refresh();
- const note=document.createElement('p');note.className='warning';note.textContent='Dit is alleen een test. Shiny en kostuums worden nog niet onderscheiden. De aantallen worden niet opgeslagen en niets wordt aan je definitieve Pokédex GO toegevoegd.';matches.appendChild(note);
+ matches.append(gallery,total);shinyBox.onchange=refresh;eventBox.onchange=refresh;refresh();
+ const note=document.createElement('p');note.className='warning';note.textContent='De shiny-afbeeldingen tonen alleen de basisvorm; het gekozen kostuum wordt nog niet afgebeeld. Kostuums worden niet automatisch herkend. Controleer elk exemplaar. Er wordt niets opgeslagen of overgezet.';matches.appendChild(note);
 };
 </script></body></html>
