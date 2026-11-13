@@ -2,25 +2,31 @@
 const upload=document.getElementById('upload'),scan=document.getElementById('scan'),status=document.getElementById('status'),out=document.getElementById('text'),matches=document.getElementById('matches');let files=[];let detectedSprites=[];
 upload.onchange=()=>{files=Array.from(upload.files||[]).slice(0,8);scan.disabled=!files.length;document.getElementById('chosen').textContent=files.length+' afbeelding(en) gekozen';const previews=document.getElementById('previews');previews.replaceChildren();for(const f of files){const img=document.createElement('img');img.src=URL.createObjectURL(f);img.onload=()=>URL.revokeObjectURL(img.src);img.alt=f.name;previews.appendChild(img)}};
 function loadOCR(){return new Promise((resolve,reject)=>{if(window.Tesseract)return resolve();const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=()=>reject(Error('Herkenningsbibliotheek kon niet worden geladen'));document.head.appendChild(script)})}
-scan.onclick=async()=>{scan.disabled=true;try{status.textContent='Herkenning wordt geladen…';await loadOCR();const worker=await Tesseract.createWorker('eng');let lines=[];detectedSprites=[];try{for(let i=0;i<files.length;i++){status.textContent='Screenshot '+(i+1)+' van '+files.length+' wordt herkend…';const result=await worker.recognize(files[i]);lines.push('--- Screenshot '+(i+1)+' ---\n'+result.data.text);try{await extractScreenSprites(files[i],result.data)}catch(err){console.warn('Uitsnijden niet gelukt',err)}}}finally{await worker.terminate()}out.value=lines.join('\n\n');status.textContent='Klaar. Controleer de tekst hieronder en zoek de namen.'}catch(e){status.textContent='Herkenning mislukt: '+e.message+'. Je kunt hieronder ook zelf namen invullen.'}finally{scan.disabled=!files.length}};
+scan.onclick=async()=>{scan.disabled=true;try{status.textContent='Herkenning wordt geladen…';await loadOCR();const worker=await Tesseract.createWorker('eng');let lines=[];detectedSprites=[];try{for(let i=0;i<files.length;i++){status.textContent='Screenshot '+(i+1)+' van '+files.length+' wordt herkend…';const result=await worker.recognize(files[i],{}, {blocks:true});lines.push('--- Screenshot '+(i+1)+' ---\n'+result.data.text);try{await extractScreenSprites(files[i],result.data)}catch(err){console.warn('Uitsnijden niet gelukt',err)}}}finally{await worker.terminate()}out.value=lines.join('\n\n');status.textContent='Klaar. Controleer de tekst hieronder en zoek de namen.'}catch(e){status.textContent='Herkenning mislukt: '+e.message+'. Je kunt hieronder ook zelf namen invullen.'}finally{scan.disabled=!files.length}};
 
 // Experimentele beelduitsnede: gebruik OCR-posities van namen om het daadwerkelijke
 // Pokemon-beeld erboven te tonen. Geen onbetrouwbare kostuumclassificatie.
 async function extractScreenSprites(file,data){
  const bitmap=await createImageBitmap(file),w=bitmap.width,h=bitmap.height;
  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
- const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap,0,0);
- const words=data.words||[];
+ const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);
  const names=new Set(['pikachu','eevee','rowlet','gengar','decidueye','snorlax','noibat','zubat','crobat','golbat','aron','mareep','dratini','drifloon','skrelp','bagon','meowth','machop','magnemite']);
- const entries=words.filter(x=>names.has((x.text||'').replace(/[^a-z]/gi,'').toLowerCase())&&x.bbox);
- for(const entry of entries){
+ const words=[];
+ const visit=node=>{if(!node||typeof node!=='object')return;if(node.text&&node.bbox&&(!node.words||!node.words.length)&&(!node.lines||!node.lines.length))words.push(node);for(const key of ['blocks','paragraphs','lines','words'])if(Array.isArray(node[key]))node[key].forEach(visit)};
+ visit(data);
+ // Tesseract v5 returns blocks only when explicitly requested. If unavailable,
+ // show a safe full screenshot preview instead of pretending to classify a costume.
+ for(const entry of words){
+  const name=(entry.text||'').replace(/[^a-z]/gi,'').toLowerCase();
+  if(!names.has(name))continue;
   const b=entry.bbox,center=(b.x0+b.x1)/2;
-  const colWidth=w/3, left=Math.max(0,Math.round(center-colWidth*.46)),top=Math.max(0,Math.round(b.y0-colWidth*.95));
-  const cw=Math.min(w-left,Math.round(colWidth*.92)),ch=Math.max(1,Math.round(b.y0-top-3));
+  const colWidth=w/3,left=Math.max(0,Math.round(center-colWidth*.44));
+  const top=Math.max(0,Math.round(b.y0-colWidth*.85));
+  const cw=Math.min(w-left,Math.round(colWidth*.88)),ch=Math.max(1,Math.round(b.y0-top-4));
   if(ch<10)continue;
   const crop=document.createElement('canvas');crop.width=cw;crop.height=ch;
   crop.getContext('2d').drawImage(canvas,left,top,cw,ch,0,0,cw,ch);
-  detectedSprites.push({name:entry.text.toLowerCase(),src:crop.toDataURL('image/png'),y:b.y0});
+  detectedSprites.push({name,src:crop.toDataURL('image/png'),y:b.y0});
  }
  bitmap.close();
 }
@@ -50,7 +56,7 @@ document.getElementById('analyze').onclick=()=>{
  const shinyLabel=document.createElement('label');const shinyBox=document.createElement('input');shinyBox.type='checkbox';shinyBox.checked=hasShiny;shinyLabel.append(shinyBox,document.createTextNode(' Screenshot gefilterd op Shiny'));
  const eventLabel=document.createElement('label');eventLabel.style.display='block';const eventBox=document.createElement('input');eventBox.type='checkbox';eventBox.checked=hasEvent;eventLabel.append(eventBox,document.createTextNode(' Screenshot gefilterd op Event / kostuum'));
  filters.append(shinyLabel,eventLabel);matches.appendChild(filters);
- const spritePool=detectedSprites.slice();const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
+ const spritePool=detectedSprites.slice();const info=document.createElement('p');info.className='warning';info.textContent=spritePool.length+' uitsneden uit screenshot gevonden. '+(spritePool.length?'Controleer of ze bij de juiste naam staan.':'Geen uitsneden gevonden: de tekstherkenner gaf geen bruikbare naamposities door.');matches.appendChild(info);const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  const total=document.createElement('p');
  const refresh=()=>{
   let n=0;
