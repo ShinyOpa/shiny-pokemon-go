@@ -1,0 +1,226 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pokédex GO – Kostuumtest 2</title><style>*{box-sizing:border-box}body{margin:0;background:#0d121b;color:#f5f7fb;font:16px system-ui}.wrap{max-width:700px;margin:auto;padding:18px}h1{color:#f3ce71;font-size:24px}p{line-height:1.5}.panel{background:#1b2a3d;border:1px solid #4d6380;border-radius:16px;padding:16px;margin:14px 0}button,.file{display:inline-block;background:#2c567b;color:white;border:1px solid #82a4c0;border-radius:11px;padding:12px 16px;font:inherit;cursor:pointer;margin:6px 6px 6px 0}button:disabled{opacity:.5}input[type=file]{display:none}img{max-width:100%;max-height:480px;object-fit:contain;border-radius:8px}textarea{width:100%;min-height:140px;background:#101c2b;color:white;border:1px solid #678;border-radius:9px;padding:10px}.result{padding:9px;border-bottom:1px solid #40546d}.muted{color:#bbcbd9;font-size:14px}.warning{color:#ffd992}a{color:#9bdaff}label{cursor:pointer}</style></head><body><main class="wrap"><h1>🧪 Pokémon GO kostuumherkenning – test 2</h1><p><strong>TESTVERSIE</strong> – alleen herkennen en controleren. Er worden geen Pokémon, tellers of andere gegevens in je definitieve Pokédex GO gewijzigd.</p><div class="panel"><label class="file" for="upload">📷 Kies screenshot(s)</label><input id="upload" type="file" accept="image/*" multiple><p id="chosen" class="muted">Nog geen afbeeldingen gekozen.</p><div id="previews"></div><button id="scan" disabled>🔎 Herken tekst op screenshots</button><p id="status" class="muted" aria-live="polite">Herkenning werkt via Tesseract.js; hiervoor is internet nodig. De screenshots worden in je browser verwerkt.</p></div><div class="panel"><h2>Gevonden tekst</h2><p class="muted">Controleer de herkende tekst. Je kunt fouten zelf corrigeren. Pokémon GO toont soms alleen bijnamen of CP; dan kan de herkenning de soort niet betrouwbaar bepalen.</p><textarea id="text" placeholder="Hier verschijnt de herkende tekst..."></textarea><button id="analyze">🔎 Zoek Pokémon-namen in tekst</button><button id="quickAutoCostume" type="button" style="display:block;margin-top:10px;background:#2e624f">🦋 Herken kostuums automatisch (test)</button><p id="quickAutoStatus" class="warning"></p><div id="matches"></div></div><div class="panel"><h2>Wat gebeurt er hierna?</h2><p>Deze proef herkent tekst uit je screenshots en toont mogelijke Pokémon. Shiny, kostuums en aantallen worden <strong>niet automatisch afgeleid</strong> als ze niet betrouwbaar zichtbaar zijn. Na jouw controle kunnen we bepalen hoe een veilige import met bevestiging eruit moet zien.</p><p><a href="./index.html">← Terug naar de definitieve Pokédex GO</a></p></div><section class="panel" id="comparePanel"><h2>🧪 Kostuum herkennen door afbeeldingen te vergelijken</h2><p>Extra vergelijking: kies één uitgesneden Pokémon uit je screenshot en minimaal twee afbeeldingen van mogelijke kostuums. De app rangschikt de overeenkomsten automatisch. Dit is nog geen betrouwbare herkenning uit een volledige screenshot.</p><label>Pokémon-uitsnede <input id="compareTarget" type="file" accept="image/*"></label><p><label>Vergelijkingsafbeeldingen <input id="compareRefs" type="file" accept="image/*" multiple></label></p><button id="compareGo" type="button">🔍 Vergelijk kostuums</button><p id="compareStatus" class="warning" aria-live="polite"></p><div id="compareResults"></div><p class="muted">Geen gegevens worden opgeslagen of overgezet. De vergelijking vindt op je telefoon plaats.</p></section><section class="panel"><h2>🦋 Automatische kostuumvergelijking – laatste test</h2><p>Geen losse vergelijkingsfoto’s nodig. Na het herkennen van je screenshot vergelijkt de app de uitsneden automatisch met kostuumafbeeldingen uit je eigen Pokédex. De beste kandidaten verschijnen bij de Pokémon-kaartjes. Dit blijft een onzekere beeldvergelijking.</p><button id="autoCostumeBtn" type="button">🔎 Zoek kostuums automatisch</button><p id="autoCostumeStatus" class="warning" aria-live="polite"></p></section></main><script>
+const upload=document.getElementById('upload'),scan=document.getElementById('scan'),status=document.getElementById('status'),out=document.getElementById('text'),matches=document.getElementById('matches');let files=[];let detectedSprites=[];
+upload.onchange=()=>{files=Array.from(upload.files||[]).slice(0,8);scan.disabled=!files.length;document.getElementById('chosen').textContent=files.length+' afbeelding(en) gekozen';const previews=document.getElementById('previews');previews.replaceChildren();for(const f of files){const img=document.createElement('img');img.src=URL.createObjectURL(f);img.onload=()=>URL.revokeObjectURL(img.src);img.alt=f.name;previews.appendChild(img)}};
+function loadOCR(){return new Promise((resolve,reject)=>{if(window.Tesseract)return resolve();const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=()=>reject(Error('Herkenningsbibliotheek kon niet worden geladen'));document.head.appendChild(script)})}
+scan.onclick=async()=>{scan.disabled=true;try{status.textContent='Herkenning wordt geladen…';await loadOCR();const worker=await Tesseract.createWorker('eng');let lines=[];detectedSprites=[];try{for(let i=0;i<files.length;i++){status.textContent='Screenshot '+(i+1)+' van '+files.length+' wordt herkend…';const result=await worker.recognize(files[i],{}, {blocks:true});lines.push('--- Screenshot '+(i+1)+' ---\n'+result.data.text);try{await extractScreenSprites(files[i],result.data)}catch(err){console.warn('Uitsnijden niet gelukt',err)}}}finally{await worker.terminate()}out.value=lines.join('\n\n');status.textContent='Klaar. Controleer de tekst hieronder en zoek de namen.'}catch(e){status.textContent='Herkenning mislukt: '+e.message+'. Je kunt hieronder ook zelf namen invullen.'}finally{scan.disabled=!files.length}};
+
+// Experimentele beelduitsnede: gebruik OCR-posities van namen om het daadwerkelijke
+// Pokemon-beeld erboven te tonen. Geen onbetrouwbare kostuumclassificatie.
+async function extractScreenSprites(file,data){
+ const bitmap=await createImageBitmap(file),w=bitmap.width,h=bitmap.height;
+ const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+ const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);
+ const names=new Set(['pikachu','eevee','rowlet','gengar','decidueye','snorlax','noibat','zubat','crobat','golbat','aron','mareep','dratini','drifloon','skrelp','bagon','meowth','machop','magnemite']);
+ const candidates=[];
+ const visit=node=>{
+  if(!node||typeof node!=='object')return;
+  if(node.text&&node.bbox){
+   const name=node.text.trim().replace(/[^a-z]/gi,'').toLowerCase();
+   if(names.has(name))candidates.push({name,b:node.bbox});
+  }
+  for(const key of ['blocks','paragraphs','lines','words'])if(Array.isArray(node[key]))node[key].forEach(visit);
+ };
+ visit(data);
+ // OCR repeats the same word at block, line and word levels. Keep one
+ // occurrence per actual screen position, rather than counting each OCR layer.
+ const unique=[];
+ for(const x of candidates.sort((a,b)=>a.b.y0-b.b.y0||a.b.x0-b.b.x0)){
+  const cx=(x.b.x0+x.b.x1)/2,cy=(x.b.y0+x.b.y1)/2;
+  if(unique.some(v=>v.name===x.name&&Math.abs(v.cx-cx)<w*.065&&Math.abs(v.cy-cy)<h*.025))continue;
+  unique.push({...x,cx,cy});
+ }
+ for(const entry of unique){
+  const b=entry.b, colWidth=w/3;
+  const left=Math.max(0,Math.round(entry.cx-colWidth*.43));
+  const top=Math.max(0,Math.round(b.y0-colWidth*.78));
+  const cw=Math.min(w-left,Math.round(colWidth*.86));
+  const ch=Math.min(h-top,Math.max(1,Math.round(b.y0-top-colWidth*.07)));
+  if(ch<12||cw<12)continue;
+  const crop=document.createElement('canvas');crop.width=cw;crop.height=ch;
+  crop.getContext('2d').drawImage(canvas,left,top,cw,ch,0,0,cw,ch);
+  detectedSprites.push({name:entry.name,src:crop.toDataURL('image/png'),y:b.y0});
+ }
+ bitmap.close();
+}
+const common=["Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard","Squirtle","Wartortle","Blastoise","Caterpie","Metapod","Butterfree","Weedle","Kakuna","Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow","Ekans","Arbok","Pikachu","Raichu","Sandshrew","Sandslash","Nidoran♀","Nidorina","Nidoqueen","Nidoran♂","Nidorino","Nidoking","Clefairy","Clefable","Vulpix","Ninetales","Jigglypuff","Wigglytuff","Zubat","Golbat","Oddish","Gloom","Vileplume","Paras","Parasect","Venonat","Venomoth","Diglett","Dugtrio","Meowth","Persian","Psyduck","Golduck","Mankey","Primeape","Growlithe","Arcanine","Poliwag","Poliwhirl","Poliwrath","Abra","Kadabra","Alakazam","Machop","Machoke","Machamp","Bellsprout","Weepinbell","Victreebel","Tentacool","Tentacruel","Geodude","Graveler","Golem","Ponyta","Rapidash","Slowpoke","Slowbro","Magnemite","Magneton","Farfetch'd","Doduo","Dodrio","Seel","Dewgong","Grimer","Muk","Shellder","Cloyster","Gastly","Haunter","Gengar","Onix","Drowzee","Hypno","Krabby","Kingler","Voltorb","Electrode","Exeggcute","Exeggutor","Cubone","Marowak","Hitmonlee","Hitmonchan","Lickitung","Koffing","Weezing","Rhyhorn","Rhydon","Chansey","Tangela","Kangaskhan","Horsea","Seadra","Goldeen","Seaking","Staryu","Starmie","Mr. Mime","Scyther","Jynx","Electabuzz","Magmar","Pinsir","Tauros","Magikarp","Gyarados","Lapras","Ditto","Eevee","Vaporeon","Jolteon","Flareon","Porygon","Omanyte","Omastar","Kabuto","Kabutops","Aerodactyl","Snorlax","Articuno","Zapdos","Moltres","Dratini","Dragonair","Dragonite","Mewtwo","Mew","Aron","Mareep","Drifloon","Skrelp","Bagon","Flabébé","Vivillon","Unown","Lucario","Rayquaza"];
+
+const dexByName={Pikachu:25,Eevee:133,Rowlet:722,Gengar:94,Decidueye:724,Snorlax:143,Noibat:714,Zubat:41,Crobat:169,Golbat:42,Aron:304,Mareep:179,Drifloon:425,Skrelp:690,Bagon:371,Dratini:147,Meowth:52,Machop:66,Magnemite:81,'Flabébé':669,Vivillon:666,Unown:201,Lucario:448,Rayquaza:384};
+const costumeChoices={
+ Pikachu:['Nog kiezen','Halloween-hoed / cape','Feesthoed','Kerstmuts','Heksenhoed','Andere Pikachu-kostuum'],
+ Eevee:['Nog kiezen','Feesthoed','Bloemenkrans','Kersenbloesem','Andere Eevee-kostuum'],
+ Rowlet:['Nog kiezen','Halloween-hoed','Andere Rowlet-kostuum'],
+ Gengar:['Nog kiezen','Halloween-kostuum','Feesthoed','Andere Gengar-kostuum'],
+ Decidueye:['Nog kiezen','Halloween-kostuum','Andere Decidueye-kostuum'],
+ Snorlax:['Nog kiezen','Slaapmuts','Andere Snorlax-kostuum'],
+ Zubat:['Nog kiezen','Hoge hoed','Andere Zubat-kostuum'],
+ Golbat:['Nog kiezen','Hoge hoed','Andere Golbat-kostuum'],
+ Crobat:['Nog kiezen','Hoge hoed','Andere Crobat-kostuum']
+};
+document.getElementById('analyze').onclick=()=>{
+ const words=out.value.toLowerCase().match(/[a-zÀ-ÿ]+/gi)||[];
+ const counts=common.map(name=>({name,count:words.filter(w=>w.toLowerCase()===name.toLowerCase()).length})).filter(x=>x.count>0);
+ const hasShiny=/\bshiny\b/i.test(out.value);
+ const hasEvent=/\bevent\b/i.test(out.value);
+ matches.replaceChildren();
+ const heading=document.createElement('p');heading.textContent=counts.length?counts.length+' soorten, '+counts.reduce((n,x)=>n+x.count,0)+' exemplaren herkend.':'Geen namen herkend; controleer de tekst.';
+ matches.appendChild(heading);
+ const filters=document.createElement('div');filters.className='panel';
+ const shinyLabel=document.createElement('label');const shinyBox=document.createElement('input');shinyBox.type='checkbox';shinyBox.checked=hasShiny;shinyLabel.append(shinyBox,document.createTextNode(' Screenshot gefilterd op Shiny'));
+ const eventLabel=document.createElement('label');eventLabel.style.display='block';const eventBox=document.createElement('input');eventBox.type='checkbox';eventBox.checked=hasEvent;eventLabel.append(eventBox,document.createTextNode(' Screenshot gefilterd op Event / kostuum'));
+ filters.append(shinyLabel,eventLabel);matches.appendChild(filters);
+ const spritePool=detectedSprites.slice();const info=document.createElement('p');info.className='warning';info.textContent=spritePool.length+' unieke Pokémon-posities uit screenshot gevonden. '+(spritePool.length?'Controleer of ze bij de juiste naam staan.':'Geen uitsneden gevonden: de tekstherkenner gaf geen bruikbare naamposities door.');matches.appendChild(info);const gallery=document.createElement('div');gallery.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
+ const total=document.createElement('p');
+ const refresh=()=>{
+  let n=0;
+  gallery.querySelectorAll('article').forEach(card=>{
+   const check=card.querySelector('input[type=checkbox]');
+   if(check.checked)n++;
+   const img=card.querySelector('img.reference-sprite');
+   const dex=Number(card.dataset.dex);
+   img.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+(shinyBox.checked?'shiny/':'')+dex+'.png';
+  });
+  total.textContent='Bevestigd: '+n+' exemplaren (alleen test)';
+ };
+ for(const item of counts){
+  for(let i=0;i<Math.min(item.count,100);i++){
+   const card=document.createElement('article');card.style.cssText='display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:10px 5px;background:#102033;border:1px solid #56718e;border-radius:12px';
+   const dex=dexByName[item.name]||common.indexOf(item.name)+1;card.dataset.dex=dex;
+   const img=document.createElement('img');img.className='reference-sprite';img.style.cssText='height:92px;width:100%;object-fit:contain';img.alt=item.name;
+   const title=document.createElement('strong');title.textContent=item.name+(item.count>1?' '+(i+1)+'/'+item.count:'');
+   const label=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=true;check.onchange=refresh;label.append(check,document.createTextNode(' Herkenning klopt'));
+   const costume=document.createElement('select');costume.setAttribute('aria-label','Kostuum van '+item.name);costume.style.cssText='max-width:100%;width:95%;background:#fff;color:#111;padding:6px;border-radius:6px';
+   for(const choice of costumeChoices[item.name]||['Nog kiezen','Geen kostuum','Ander kostuum']){const option=document.createElement('option');option.textContent=choice;costume.appendChild(option)}
+   const custom=document.createElement('input');custom.placeholder='Of typ kostuumnaam';custom.style.cssText='width:95%;padding:6px;border-radius:6px;border:1px solid #678';custom.setAttribute('aria-label','Andere kostuumnaam voor '+item.name);
+   const actual=spritePool.findIndex(x=>x.name===item.name.toLowerCase());
+   if(actual>=0){const crop=document.createElement('img');crop.src=spritePool.splice(actual,1)[0].src;crop.alt='Uitsnede uit jouw screenshot';crop.style.cssText='height:95px;width:100%;object-fit:contain;border:1px dashed #668';const cap=document.createElement('small');cap.textContent='Echte screenshot-uitsnede (controleer)';card.append(crop,cap)}
+   const uncertain=document.createElement('small');uncertain.style.color='#ffd992';uncertain.textContent='Kostuum niet automatisch vastgesteld';
+   card.append(img,title,label,uncertain,costume,custom);gallery.appendChild(card);
+  }
+ }
+ matches.append(gallery,total);shinyBox.onchange=refresh;eventBox.onchange=refresh;refresh();
+ const note=document.createElement('p');note.className='warning';note.textContent='Dit is een eerste beeldtest: waar OCR de positie van de naam vindt, verschijnt een uitsnede van jouw echte screenshot. De shiny-sprite is alleen een referentie. Automatische kostuumclassificatie is nog niet betrouwbaar beschikbaar. Controleer elk exemplaar. Er wordt niets opgeslagen of overgezet.';matches.appendChild(note);
+};
+
+// Losse, lokale experimentele kleur-/vormvergelijking; geen automatische registratie.
+async function costumePixels(file){const bitmap=await createImageBitmap(file);const c=document.createElement('canvas');c.width=64;c.height=64;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap,0,0,64,64);bitmap.close();return ctx.getImageData(0,0,64,64).data}
+function costumeSignature(p){const v=new Float64Array(48),weights=new Float64Array(16);for(let y=0;y<64;y++)for(let x=0;x<64;x++){const i=(y*64+x)*4;if(p[i+3]<100)continue;const r=p[i],g=p[i+1],b=p[i+2];if(r>230&&g>230&&b>230)continue;const k=Math.floor(y/16)*4+Math.floor(x/16),weight=Math.max(.1,(Math.max(r,g,b)-Math.min(r,g,b))/255);v[k*3]+=r*weight;v[k*3+1]+=g*weight;v[k*3+2]+=b*weight;weights[k]+=weight}for(let k=0;k<16;k++)for(let j=0;j<3;j++)v[k*3+j]/=Math.max(1,weights[k]*255);return v}
+function costumeDistance(a,b){let d=0;for(let i=0;i<a.length;i++)d+=(a[i]-b[i])**2;return Math.sqrt(d/a.length)}
+document.getElementById('compareGo').onclick=async()=>{const target=document.getElementById('compareTarget').files[0],refs=[...document.getElementById('compareRefs').files].slice(0,40),state=document.getElementById('compareStatus'),results=document.getElementById('compareResults'),button=document.getElementById('compareGo');results.replaceChildren();if(!target||refs.length<2){state.textContent='Kies één uitsnede en minstens twee vergelijkingsafbeeldingen.';return}button.disabled=true;state.textContent='Afbeeldingen vergelijken…';try{const a=costumeSignature(await costumePixels(target)),rank=[];for(const file of refs){rank.push({file,d:costumeDistance(a,costumeSignature(await costumePixels(file)))})}rank.sort((x,y)=>x.d-y.d);state.textContent='Beste visuele kandidaat: '+rank[0].file.name+'. Controleer zelf: kleur en vorm zijn niet voldoende voor zekere kostuumherkenning.';for(const item of rank.slice(0,10)){const div=document.createElement('div');div.className='result';const img=document.createElement('img');img.style.cssText='height:75px;width:90px;object-fit:contain;vertical-align:middle;margin-right:10px';const url=URL.createObjectURL(item.file);img.src=url;img.onload=()=>URL.revokeObjectURL(url);const span=document.createElement('span');span.textContent=item.file.name;div.append(img,span);results.appendChild(div)}}catch(e){state.textContent='Vergelijking mislukt: '+e.message}finally{button.disabled=false}};
+
+/* Automatische proef: zoek voor elke herkende soort zelf de kostuumafbeeldingen
+   in de bestaande Pokédex en vergelijk ze met de echte schermafbeelding. */
+let costumeLibraryPromise;
+async function getCostumeLibrary(){
+ if(!costumeLibraryPromise)costumeLibraryPromise=(async()=>{
+  const response=await fetch('./index.html',{cache:'no-store'});if(!response.ok)throw Error('Pokédex-bron niet bereikbaar');
+  const html=await response.text(),map=new Map();
+  const re=/"(costume-(\d+)-[^"]+)":"(https?:[^"]+\.(?:png|webp)[^"]*)"/g;
+  for(const m of html.matchAll(re)){const dex=Number(m[2]);if(!map.has(dex))map.set(dex,[]);if(!map.get(dex).some(x=>x.id===m[1]))map.get(dex).push({id:m[1],url:m[3].replace(/&amp;/g,'&')})}
+  return map;
+ })();return costumeLibraryPromise;
+}
+function loadCostumeImage(url){return new Promise((resolve,reject)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Afbeelding niet beschikbaar'));im.src=url})}
+function visualSignature(img){
+ // Find the main connected foreground object, ignoring CP, stars and background.
+ const c=document.createElement('canvas');c.width=120;c.height=120;
+ const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,120,120);
+ const p=ctx.getImageData(0,0,120,120).data,N=14400,mask=new Uint8Array(N);
+ const screenshot=img.dataset?.screenCrop==='true';
+ for(let y=0;y<120;y++)for(let x=0;x<120;x++){
+  const k=y*120+x,i=k*4,r=p[i],g=p[i+1],b=p[i+2],alpha=p[i+3];
+  if(alpha<100)continue;
+  const pale=r>145&&g>150&&b>125&&Math.max(r,g,b)-Math.min(r,g,b)<75;
+  if(pale||(r>215&&g>215&&b>215))continue;
+  // Screenshot sprites are in the lower half; upper CP and star decorations are excluded.
+  if(screenshot&&y<43)continue;
+  mask[k]=1;
+ }
+ const seen=new Uint8Array(N),parts=[];
+ for(let k=0;k<N;k++){
+  if(!mask[k]||seen[k])continue;
+  const stack=[k],pixels=[];seen[k]=1;
+  while(stack.length){
+   const q=stack.pop(),x=q%120,y=(q/120)|0;pixels.push(q);
+   for(const z of [q-1,q+1,q-120,q+120]){
+    if(z<0||z>=N||((z===q-1||z===q+1)&&((z/120)|0)!==y)||!mask[z]||seen[z])continue;
+    seen[z]=1;stack.push(z);
+   }
+  }
+  if(pixels.length>=12)parts.push(pixels);
+ }
+ parts.sort((x,y)=>y.length-x.length);
+ if(!parts.length)return null;
+ // Costume ornaments sometimes form separate pieces: retain components near main body.
+ const main=parts[0],mx=main.reduce((t,k)=>t+k%120,0)/main.length,my=main.reduce((t,k)=>t+Math.floor(k/120),0)/main.length;
+ const points=[];
+ for(const part of parts){
+  const cx=part.reduce((t,k)=>t+k%120,0)/part.length,cy=part.reduce((t,k)=>t+Math.floor(k/120),0)/part.length;
+  if(part!==main&&(part.length<main.length*.025||Math.abs(cx-mx)>35||Math.abs(cy-my)>38))continue;
+  for(const k of part){const i=k*4;points.push([k%120,Math.floor(k/120),p[i],p[i+1],p[i+2]])}
+ }
+ if(points.length<20)return null;
+ let left=120,right=0,top=120,bottom=0;
+ for(const [x,y] of points){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
+ const out=new Float64Array(6*6*4+12),counts=new Float64Array(36);
+ for(const [x,y,r,g,b] of points){
+  const xx=Math.min(5,Math.floor(6*(x-left)/Math.max(1,right-left+1))),yy=Math.min(5,Math.floor(6*(y-top)/Math.max(1,bottom-top+1)));
+  const k=yy*6+xx,j=k*4;out[j]+=r/255;out[j+1]+=g/255;out[j+2]+=b/255;counts[k]++;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;
+  const hue=d===0?11:max===r?Math.floor((((g-b)/d+6)%6)*2):max===g?Math.floor(((b-r)/d+2)*2):Math.floor(((r-g)/d+4)*2);
+  out[144+Math.min(11,hue)]++;
+ }
+ for(let k=0;k<36;k++)if(counts[k]){for(let j=0;j<3;j++)out[k*4+j]/=counts[k];out[k*4+3]=Math.min(1,counts[k]/110)}
+ for(let k=144;k<156;k++)out[k]/=points.length;
+ return out;
+}
+function signatureDifference(a,b){
+ // Vergelijk kostuumdetails aan de bovenzijde, niet de totale Pokémonkleur.
+ // Gebruik naast kleur ook de vorm en aanwezigheid van pixels per vak.
+ let sum=0,weight=0;
+ for(let cell=0;cell<36;cell++){
+  const row=Math.floor(cell/6),col=cell%6,i=cell*4;
+  const aa=a[i+3],bb=b[i+3];
+  if(Math.max(aa,bb)<.018)continue;
+  const shape=Math.abs(aa-bb);
+  const color=((a[i]-b[i])**2+(a[i+1]-b[i+1])**2+(a[i+2]-b[i+2])**2)/3;
+  // Hoofddeksels zijn doorgaans boven of naast het hoofd zichtbaar.
+  const w=row===0?5:row===1?4:row===2?2.2:row===3?0.65:0.15;
+  const edge=(col===0||col===5)?1.25:1;
+  const d=(shape*.8+color*.55)*w*edge;
+  sum+=d;weight+=w*edge;
+ }
+ return Math.sqrt(sum/Math.max(.01,weight));
+}
+async function autoSuggestCostumes(){
+ const status=document.getElementById('autoCostumeStatus'),btn=document.getElementById('autoCostumeBtn');
+ if(!detectedSprites.length){status.textContent='Kies eerst een screenshot, herken de tekst en zoek de Pokémon-namen.';return}
+ btn.disabled=true;status.textContent='Kostuumafbeeldingen uit je eigen Pokédex ophalen en vergelijken…';
+ try{
+  const library=await getCostumeLibrary();let done=0,available=0;
+  for(const card of document.querySelectorAll('#matches article')){
+   const dex=Number(card.dataset.dex),entries=(library.get(dex)||[]).slice(0,65);
+   const name=card.querySelector('strong')?.textContent?.replace(/\s+\d+\/\d+$/,'').toLowerCase();
+   const crop=card.querySelector('img[alt="Uitsnede uit jouw screenshot"]');
+   const old=card.querySelector('.auto-costume');if(old)old.remove();
+   const result=document.createElement('div');result.className='auto-costume';result.style.cssText='font-size:13px;color:#ffe1a3;padding:5px';
+   card.appendChild(result);
+   if(!crop||!entries.length){result.textContent='Geen bruikbare uitsnede of kostuumreferenties.';continue}
+   available++;
+   const target=await loadCostumeImage(crop.src);target.dataset.screenCrop='true';const a=visualSignature(target);
+   if(!a){result.textContent='Uitsnede onvoldoende duidelijk voor vergelijking.';continue}
+   const ranked=[];
+   for(const entry of entries){try{const im=await loadCostumeImage(entry.url),b=visualSignature(im);if(b)ranked.push({entry,score:signatureDifference(a,b)})}catch(e){}}
+   ranked.sort((x,y)=>x.score-y.score);
+   if(ranked.length){
+    const best=ranked.slice(0,3); const gap=ranked.length>1?(ranked[1].score-ranked[0].score)/Math.max(.001,ranked[1].score):0;
+    result.textContent=gap<.13?'Geen overtuigende match: de beste kandidaten liggen te dicht bij elkaar. Vergelijk de kostuums zelf: ':'Mogelijke match op basis van de bovenste kostuumdetails (nog controleren): ';
+    for(const [i,v] of best.entries()){const el=document.createElement('div');el.style.cssText='display:flex;align-items:center;gap:5px;text-align:left;margin-top:4px';const im=document.createElement('img');im.src=v.entry.url;im.style.cssText='width:48px;height:48px;object-fit:contain';const label=document.createElement('span');label.textContent=(i+1)+'. '+v.entry.id.replace(/^costume-\d+-/,'').replace(/-$/,'').replace(/-/g,' ');el.append(im,label);result.append(el)}
+    done++;
+   }else result.textContent='Geen vergelijkbare kostuumafbeeldingen geladen.';
+  }
+  status.textContent=done+' afzonderlijke Pokémon-uitsneden vergeleken met kostuumafbeeldingen. Controleer de suggesties; dit blijft een test.';
+ }catch(e){status.textContent='Automatische vergelijking niet gelukt: '+e.message}finally{btn.disabled=false}
+}
+document.getElementById('autoCostumeBtn').onclick=autoSuggestCostumes;
+document.getElementById('quickAutoCostume').onclick=async()=>{const b=document.getElementById('quickAutoCostume'),st=document.getElementById('quickAutoStatus');b.disabled=true;st.textContent='Kostuumvergelijking gestart. De resultaten verschijnen bij de Pokémon-kaartjes.';try{await autoSuggestCostumes();st.textContent=document.getElementById('autoCostumeStatus').textContent;}finally{b.disabled=false}};
+</script></body></html>
