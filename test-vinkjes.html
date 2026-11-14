@@ -157,7 +157,7 @@ document.addEventListener('click',function(e){
  const b=e.target.closest('button[data-unown]');if(!b)return;
  const mode=el('shinyCatalog').value==='ordinary'?'shiny':'normal',key=mode+'-'+b.dataset.unown;
  const store=unownRead();store[key]=Math.max(0,(Number(store[key])||0)+Number(b.dataset.unownD));
- localStorage.setItem(unownStorageKey,JSON.stringify(store));render();
+ localStorage.setItem(unownStorageKey,JSON.stringify(store));unownFormsIsOpen=true;render();
 });
 
 
