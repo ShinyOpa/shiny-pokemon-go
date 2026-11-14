@@ -137,12 +137,13 @@ document.addEventListener('click',e=>{
 const unownLetters='ABCDEFGHIJKLMNOPQRSTUVWXYZ!?'.split('');
 const unownStorageKey='pokedexgo_unown_forms_v1';
 function unownRead(){try{const v=JSON.parse(localStorage.getItem(unownStorageKey)||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}}
+let unownFormsIsOpen=false;
 function renderUnownForms(filtered,sc){
  const host=el('unownFormsHost');if(!host)return;
  if(!filtered.some(x=>Number(x.dex||x.id)===201&&!x.kind&&!x.form)){host.innerHTML='';return}
  const shiny=sc==='ordinary',store=unownRead(),mode=shiny?'shiny':'normal';
  const owned=unownLetters.filter(letter=>(Number(store[mode+'-'+letter])||0)>0).length;
- const wasOpen=document.querySelector('.unown-inline details')?.open||false;
+ const wasOpen=unownFormsIsOpen;
  host.innerHTML='<details class="unown-panel" '+(wasOpen?'open':'')+'><summary>🔤 '+(shiny?'Shiny ':'')+'vormen '+owned+'/28</summary><p class="unown-form-help">Iedere letter, ! en ? heeft een eigen vinkje. Gewone en shiny vormen worden afzonderlijk bewaard.</p><div class="unown-forms-grid">'+unownLetters.map(letter=>{
  const n=Math.max(0,Number(store[mode+'-'+letter])||0),suffix=letter==='!'?'exclamation':letter==='?'?'question':letter.toLowerCase();
  const url='https://play.pokemonshowdown.com/sprites/'+(shiny?'gen5-shiny':'gen5')+'/unown-'+suffix+'.png';
@@ -150,7 +151,7 @@ function renderUnownForms(filtered,sc){
  }).join('')+'</div></details>';
  const index=filtered.findIndex(x=>Number(x.dex||x.id)===201&&!x.kind&&!x.form);
  const card=el('grid').children[index];
- if(card){card.classList.toggle('shiny-card',shiny);if(shiny){card.style.background='linear-gradient(155deg,#473419,#221d1d)';card.style.border='3px solid #e4b653'}else{card.style.background='';card.style.border=''}const inline=document.createElement('div');inline.className='unown-inline';inline.innerHTML=host.innerHTML;host.innerHTML='';const name=card.querySelector('b'),counter=card.querySelector('.counter'),details=inline.querySelector('details');if(details){const place=()=>{card.style.gridColumn=details.open?'1 / -1':'';card.style.position='relative';if(details.open){if(counter)card.insertBefore(inline,counter);else card.appendChild(inline);inline.style.cssText='position:static;width:auto;margin:4px 0;';}else if(name){name.insertAdjacentElement('afterend',inline);const cr=card.getBoundingClientRect(),nr=name.getBoundingClientRect();const top=Math.round(nr.top-cr.top+Math.min(20,parseFloat(getComputedStyle(name).lineHeight)||16)-4);inline.style.cssText='position:absolute;top:'+top+'px;left:2px;right:2px;margin:0;z-index:3;';}};place();details.addEventListener('toggle',place);}}
+ if(card){card.classList.toggle('shiny-card',shiny);if(shiny){card.style.background='linear-gradient(155deg,#473419,#221d1d)';card.style.border='3px solid #e4b653'}else{card.style.background='';card.style.border=''}const inline=document.createElement('div');inline.className='unown-inline';inline.innerHTML=host.innerHTML;host.innerHTML='';const name=card.querySelector('b'),counter=card.querySelector('.counter'),details=inline.querySelector('details');if(details){const place=()=>{card.style.gridColumn=details.open?'1 / -1':'';card.style.position='relative';if(details.open){if(counter)card.insertBefore(inline,counter);else card.appendChild(inline);inline.style.cssText='position:static;width:auto;margin:4px 0;';}else if(name){name.insertAdjacentElement('afterend',inline);const cr=card.getBoundingClientRect(),nr=name.getBoundingClientRect();const top=Math.round(nr.top-cr.top+Math.min(20,parseFloat(getComputedStyle(name).lineHeight)||16)-4);inline.style.cssText='position:absolute;top:'+top+'px;left:2px;right:2px;margin:0;z-index:3;';}};place();details.addEventListener('toggle',()=>{unownFormsIsOpen=details.open;place()});}}
 }
 document.addEventListener('click',function(e){
  const b=e.target.closest('button[data-unown]');if(!b)return;
