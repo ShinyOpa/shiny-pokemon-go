@@ -101,7 +101,30 @@ function renderMiniorCoreForms(filtered,sc){
  const qty=Math.max(0,Number(store['qty:'+name])||0),hund=!!store['hundo:'+name];
  return '<article class="minior-core-card '+(qty?'is-owned':'')+'"><span class="minior-core-number">#774</span>'+(qty?'<span class="minior-core-check">✓</span>':'')+'<img loading="lazy" src="https://raw.githubusercontent.com/ShinyOpa/shiny-pokemon-go/main/'+file+'" alt="Minior '+name+'"><strong>Minior '+name+'</strong><button type="button" class="minior-core-hundo '+(hund?'active':'')+'" data-minior-hundo="'+name+'" aria-pressed="'+hund+'">'+(hund?'💯':'&nbsp;')+'</button><div class="unown-form-counter"><button type="button" data-minior-name="'+name+'" data-minior-step="-1">−</button><span>'+qty+'</span><button type="button" data-minior-name="'+name+'" data-minior-step="1">+</button></div></article>'
  }).join('')+'</div></details>';
- host.querySelector('details').addEventListener('toggle',e=>{miniorCoreOpen=e.target.open});
+ const index=filtered.findIndex(x=>Number(x.dex||x.id)===774);
+ const card=el('grid').children[index];
+ if(card){
+  const inline=document.createElement('div');inline.className='unown-inline minior-inline';
+  inline.innerHTML=host.innerHTML;host.innerHTML='';
+  const name=card.querySelector('b'),counter=card.querySelector('.counter'),details=inline.querySelector('details');
+  if(details){
+   const place=()=>{
+    miniorCoreOpen=details.open;
+    card.style.gridColumn=details.open?'1 / -1':'';
+    card.style.position='relative';
+    if(details.open){
+     if(counter)card.insertBefore(inline,counter);else card.appendChild(inline);
+     inline.style.cssText='position:static;width:auto;margin:4px 0;';
+    }else if(name){
+     name.insertAdjacentElement('afterend',inline);
+     const cr=card.getBoundingClientRect(),nr=name.getBoundingClientRect();
+     const top=Math.round(nr.top-cr.top+Math.min(20,parseFloat(getComputedStyle(name).lineHeight)||16)-4);
+     inline.style.cssText='position:absolute;top:'+top+'px;left:2px;right:2px;margin:0;z-index:3;';
+    }
+   };
+   place();details.addEventListener('toggle',place);
+  }
+ }else host.querySelector('details').addEventListener('toggle',e=>{miniorCoreOpen=e.target.open});
 }
 document.addEventListener('click',e=>{
  const counter=e.target.closest('button[data-minior-name]'),hund=e.target.closest('button[data-minior-hundo]');
