@@ -94,7 +94,7 @@ function miniorCoreRead(){try{const x=JSON.parse(localStorage.getItem(miniorCore
 let miniorCoreOpen=false;
 function renderMiniorCoreForms(filtered,sc){
  const host=el('miniorFormsHost');if(!host)return;
- const eligible=sc==='off'&&filtered.some(x=>Number(x.dex||x.id)===774&&!x.kind&&!x.form);
+ const eligible=sc==='off'&&filtered.some(x=>Number(x.dex||x.id)===774);
  if(!eligible){host.innerHTML='';return}
  const store=miniorCoreRead(),owned=miniorCoreForms.filter(([name])=>(Number(store['qty:'+name])||0)>0).length;
  host.innerHTML='<details class="minior-core-panel" '+(miniorCoreOpen?'open':'')+'><summary>🌈 Minior – 7 Core-vormen · '+owned+'/7</summary><p class="unown-form-help">Zeven gekleurde Minior-vormen met eigen tellers en 💯-markeringen. Meteor Form blijft apart in de Pokédex.</p><div class="minior-core-grid">'+miniorCoreForms.map(([name,file])=>{
