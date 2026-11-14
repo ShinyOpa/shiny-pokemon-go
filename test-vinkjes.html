@@ -97,7 +97,7 @@ function renderMiniorCoreForms(filtered,sc){
  const eligible=sc==='off'&&filtered.some(x=>Number(x.dex||x.id)===774);
  if(!eligible){host.innerHTML='';return}
  const store=miniorCoreRead(),owned=miniorCoreForms.filter(([name])=>(Number(store['qty:'+name])||0)>0).length;
- host.innerHTML='<details class="minior-core-panel" '+(miniorCoreOpen?'open':'')+'><summary>🌈 Vormen '+owned+'/7</summary><p class="unown-form-help">Zeven gekleurde Minior-vormen met eigen tellers en 💯-markeringen. Meteor Form blijft apart in de Pokédex.</p><div class="minior-core-grid">'+miniorCoreForms.map(([name,file])=>{
+ host.innerHTML='<details class="minior-core-panel" '+(miniorCoreOpen?'open':'')+'><summary>🌈 Vormen '+owned+'/7</summary><p class="unown-form-help">Zeven gekleurde Minior-vormen met eigen vinkjes en 💯-markeringen. Meteor Form blijft apart in de Pokédex.</p><div class="minior-core-grid">'+miniorCoreForms.map(([name,file])=>{
  const qty=Math.max(0,Number(store['qty:'+name])||0),hund=!!store['hundo:'+name];
  return '<article class="minior-core-card '+(qty?'is-owned':'')+'"><span class="minior-core-number">#774</span>'+(qty?'<span class="minior-core-check">✓</span>':'')+'<img loading="lazy" src="https://raw.githubusercontent.com/ShinyOpa/shiny-pokemon-go/main/'+file+'" alt="Minior '+name+'"><strong>Minior '+name+'</strong><button type="button" class="minior-core-hundo '+(hund?'active':'')+'" data-minior-hundo="'+name+'" aria-pressed="'+hund+'">'+(hund?'💯':'&nbsp;')+'</button><div class="unown-form-counter"><button type="button" data-minior-name="'+name+'" data-minior-step="-1">−</button><span>'+qty+'</span><button type="button" data-minior-name="'+name+'" data-minior-step="1">+</button></div></article>'
  }).join('')+'</div></details>';
@@ -173,7 +173,7 @@ function renderVivillonPatterns(filtered,sc){
  const owned=vivillonPatterns.filter(p=>(Number(store[mode+'-'+p])||0)>0).length;
  const wasOpen=vivillonTestIsOpen;
  const inline=document.createElement('div');inline.className='vivillon-inline';
- inline.innerHTML='<details class="unown-panel" '+(wasOpen?'open':'')+'><summary>🦋 '+(shiny?'Shiny ':'')+'vormen '+owned+'/20</summary><p class="unown-form-help">20 Vivillon-patronen, elk met een eigen teller. Gewone en shiny aantallen zijn gescheiden. Fancy en Poké Ball zijn nog niet in Pokémon GO beschikbaar. </p><div class="unown-forms-grid">'+vivillonPatterns.map(p=>{
+ inline.innerHTML='<details class="unown-panel" '+(wasOpen?'open':'')+'><summary>🦋 '+(shiny?'Shiny ':'')+'vormen '+owned+'/20</summary><p class="unown-form-help">20 Vivillon-patronen, elk met een eigen vinkje. Gewone en shiny vormen worden afzonderlijk bewaard. Fancy en Poké Ball zijn nog niet in Pokémon GO beschikbaar. </p><div class="unown-forms-grid">'+vivillonPatterns.map(p=>{
  const n=Math.max(0,Number(store[mode+'-'+p])||0),slug=p.toLowerCase().replace(/é/g,'e').replace(/ /g,'-');
  const spriteSlug=slug.replace('high-plains','highplains').replace('icy-snow','icysnow').replace('poke-ball','pokeball');
  const vivillonGoForms={"Archipelago":0,"Continental":2595,"Elegant":2596,"Fancy":2597,"Garden":2598,"High Plains":2599,"Icy Snow":2600,"Jungle":2601,"Marine":2602,"Meadow":2603,"Modern":2604,"Monsoon":2605,"Ocean":2606,"Polar":2608,"River":2609,"Sandstorm":2610,"Savanna":2611,"Sun":2612,"Tundra":2613,"Poké Ball":2607};
@@ -224,7 +224,7 @@ function specialTestPanel(filtered,sc){
   const container=document.createElement('div');container.className='special-test-inline';
   const details=document.createElement('details');details.className='unown-panel';details.open=!!specialTestOpen[d];
   const summary=document.createElement('summary');summary.textContent=(d===327?'🌀 ':'✂️ ')+(shiny?'Shiny ':'')+title+' vormen '+own+'/'+forms.length;details.appendChild(summary);
-  const info=document.createElement('p');info.className='unown-form-help';info.textContent='Iedere vorm heeft een eigen teller. Gewone en shiny aantallen worden afzonderlijk bewaard.';details.appendChild(info);
+  const info=document.createElement('p');info.className='unown-form-help';info.textContent='Iedere vorm heeft een eigen vinkje. Gewone en shiny vormen worden afzonderlijk bewaard.';details.appendChild(info);
   const list=document.createElement('div');list.className='unown-forms-grid';
   forms.forEach((form,n)=>{
    const cell=document.createElement('div');cell.className='unown-form-card';
@@ -295,7 +295,7 @@ function flabebeTestPanel(filtered,sc){
  const inline=document.createElement('div');inline.className='flabebe-test-inline';
  const details=document.createElement('details');details.className='unown-panel';details.open=flabebeTestOpen;
  const summary=document.createElement('summary');summary.textContent='🌸 '+(shiny?'Shiny ':'')+'Flabébé kleuren '+owned+'/5';details.appendChild(summary);
- const help=document.createElement('p');help.className='unown-form-help';help.textContent='5 bloemkleuren met eigen tellers voor gewone en shiny varianten. Gewone en shiny aantallen worden afzonderlijk opgeslagen.';details.appendChild(help);
+ const help=document.createElement('p');help.className='unown-form-help';help.textContent='5 bloemkleuren met eigen vinkjes voor gewone en shiny varianten. Gewone en shiny vormen worden afzonderlijk bewaard.';details.appendChild(help);
  const tiles=document.createElement('div');tiles.className='unown-forms-grid';
  for(const f of flabebeFlowerForms){
   const qty=count(f),cell=document.createElement('div');cell.className='unown-form-card'+(shiny?' shiny-form-card':'')+(qty?' is-owned':'');
